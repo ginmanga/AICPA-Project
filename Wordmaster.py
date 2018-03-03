@@ -8,4 +8,4 @@ print(os.listdir(path_1))
 lpath_l = os.listdir(path_1)
 for i in lpath_l:
     print(i)
-    """HELLLLLLLLLLLLLLLLLLLOOOOOOOOOOO"""
+
