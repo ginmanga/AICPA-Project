@@ -10,7 +10,6 @@ path_1 = "C:/Users/Panqiao/Documents/Research/AICPA/Files to separate/NO GVKEY"
     #print(i)
 
 
-
 tp = "C:/Users/Panqiao/Documents/Research/AICPA/Files to separate/NO GVKEY/Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.doc"
 
 fhand = open(tp)

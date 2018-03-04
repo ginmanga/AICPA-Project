@@ -11,9 +11,12 @@ path = glob.glob('C:\\Users\\Panqiao\\Documents\\Research\\AICPA\\Files to separ
 
 for i in path:
     in_file = os.path.abspath(i)
+    print(in_file)
     wb = word.Documents.Open(in_file)
-    out_file = os.path.abspath("out{}.docx".format(i))
-    wb.SaveAs2(out_file, FileFormat=16) # file format for docx
+    print(os.path.splitext(in_file)[0])
+    out_file = os.path.abspath("out{}.docx".format(in_file))
+    print(out_file)
+    b.SaveAs2(out_file, FileFormat=16) # file format for docx
     wb.Close()
 
 word.Quit()
