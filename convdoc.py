@@ -11,12 +11,16 @@ path = glob.glob('C:\\Users\\Panqiao\\Documents\\Research\\AICPA\\Files to separ
 
 for i in path:
     in_file = os.path.abspath(i)
-    print(in_file)
+    #print(in_file)
     wb = word.Documents.Open(in_file)
-    print(os.path.splitext(in_file)[0])
-    out_file = os.path.abspath("out{}.docx".format(in_file))
-    print(out_file)
-    b.SaveAs2(out_file, FileFormat=16) # file format for docx
+    #print(os.path.splitext(in_file)[0])
+    fn = os.path.splitext(in_file)[0] # takes name of file without extension
+    fn_docx = check + ".docx" # adds docx extension
+    #print(check2)
+    #out_file = os.path.abspath("out{}.docx".format(check))
+    out_file = check2
+    #print(out_file)
+    wb.SaveAs2(out_file, FileFormat=16) # file format for docx
     wb.Close()
 
 word.Quit()
