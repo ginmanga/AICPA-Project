@@ -26,13 +26,19 @@ path = glob.glob(y, recursive = True)
 #for i in path:
     #print(i)
 
+def check_path:
+    """Check file to check if converted"""
+    #If it has been converted, then erase from path
 
 for i in path:
     #break
     in_file = os.path.abspath(i)
     print(in_file)
-    wb = word.Documents.Open(in_file)
-    #print(os.path.splitext(in_file)[0])
+    try:
+        wb = word.Documents.Open(in_file)
+    except:
+        print("Could not open %s")(wb)
+
     fn = os.path.splitext(in_file)[0] # takes name of file without extension
     fn_docx = fn + ".docx" # adds docx extension
     #print(check2)
