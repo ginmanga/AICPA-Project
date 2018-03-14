@@ -34,8 +34,6 @@ def check_path(a,b):
     #print(a)
     ask = input('Do you want to check if files have been converted before? Write yes or no\n')
     if ask == 'yes':
-        #path_s = [s.strip('.DOC') for s in a]
-        #path_checks = [s.strip('.docx') for s in b]
         aa = [os.path.abspath(i) for i in a]
         b = [os.path.abspath(i) for i in b]
         path_s = [os.path.splitext(i)[0] for i in aa]
@@ -43,15 +41,10 @@ def check_path(a,b):
         path = [x for x in path_s if x not in path_checks]
     else:
         return a
-    #print(path_s)
-    #print(path_checks)
-    #print(path)
     return path
 newpath = check_path(path,path_check)
 print(newpath)
 path = newpath
-#for i in newpath:
-    #print(i)
 
 for i in path:
     in_file = os.path.abspath(i)
@@ -65,10 +58,8 @@ for i in path:
 
     fn = os.path.splitext(in_file)[0] # takes name of file without extension
     fn_docx = fn + ".docx" # adds docx extension
-    #print(check2)
-    #out_file = os.path.abspath("out{}.docx".format(check))
+    #out_file = os.path.abspath("out{}.docx".format(check)) #learn to use this command
     out_file = fn_docx
-    #print(out_file)
     wb.SaveAs2(out_file, FileFormat=16) # file format for docx
     wb.Close()
 
