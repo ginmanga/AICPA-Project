@@ -14,21 +14,26 @@ word.visible = 0
 
 
 path = input('Path to files to convert:\n')
-file_type = input('Type:\n')
+file_type = input('Type to convert:\n')
+file_type_to = input('Type to convert to:\n')
 
 y = os.path.join(path,file_type)
-
+y1 = os.path.join(path,file_type_to)
 #path = glob.glob('C:\\Users\\Panqiao\\Documents\\Research\\AICPA\\Files to separate\\GVKEY\\**/*.doc', recursive=False)
 #s = r'C:\\Users\\Panqiao\\Documents\\Research\\AICPA\\Files to separate\\GVKEY\\**/*.doc'
 #print(s)
+#**/*.docx
 path = glob.glob(y, recursive = True)
-
+path_check = glob.glob(1, recursive = True)
 #for i in path:
     #print(i)
 
-def check_path:
+def check_path():
     """Check file to check if converted"""
     #If it has been converted, then erase from path
+    for i in path:
+        file_name = os.path.abspath(i)
+
 
 for i in path:
     #break
