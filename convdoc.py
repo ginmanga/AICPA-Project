@@ -23,21 +23,21 @@ y = os.path.join(path,file_type)
 #print(s)
 path = glob.glob(y, recursive = True)
 
-for i in path:
-    print(i)
+#for i in path:
+    #print(i)
 
 
 for i in path:
-    break
+    #break
     in_file = os.path.abspath(i)
-    #print(in_file)
+    print(in_file)
     wb = word.Documents.Open(in_file)
     #print(os.path.splitext(in_file)[0])
     fn = os.path.splitext(in_file)[0] # takes name of file without extension
-    fn_docx = check + ".docx" # adds docx extension
+    fn_docx = fn + ".docx" # adds docx extension
     #print(check2)
     #out_file = os.path.abspath("out{}.docx".format(check))
-    out_file = check2
+    out_file = fn_docx
     #print(out_file)
     wb.SaveAs2(out_file, FileFormat=16) # file format for docx
     wb.Close()
