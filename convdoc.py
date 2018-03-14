@@ -49,18 +49,19 @@ def check_path(a,b):
     return path
 newpath = check_path(path,path_check)
 print(newpath)
-print(path)
+path = newpath
 #for i in newpath:
     #print(i)
 
 for i in path:
-    break
     in_file = os.path.abspath(i)
     print(in_file)
     try:
         wb = word.Documents.Open(in_file)
     except:
-        print("Could not open %s")(wb)
+        print("Could not open")
+        print(in_file)
+        continue
 
     fn = os.path.splitext(in_file)[0] # takes name of file without extension
     fn_docx = fn + ".docx" # adds docx extension
