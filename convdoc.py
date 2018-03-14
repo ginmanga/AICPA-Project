@@ -24,15 +24,19 @@ y1 = os.path.join(path,file_type_to)
 #print(s)
 #**/*.docx
 path = glob.glob(y, recursive = True)
-path_check = glob.glob(1, recursive = True)
+path_check = glob.glob(y1, recursive = True)
 #for i in path:
     #print(i)
 
 def check_path():
     """Check file to check if converted"""
     #If it has been converted, then erase from path
-    for i in path:
-        file_name = os.path.abspath(i)
+    ask = input('Do you want to check if files have been converted before?'\n "Write yes or no")
+    if ask == 'yes':
+        path_s = [s.strip('.DOC' for s in path)]
+        path_checks = [s.strip('.DOCX' for s in path_check)]
+        path = [x for x in path_s if x not in path_checks]
+    return path
 
 
 for i in path:
