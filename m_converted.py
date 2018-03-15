@@ -22,16 +22,20 @@ def check_path():
     if ask == 'yes':
         doc_ext = r'**/*.doc'
         b = glob.glob(os.path.join(path, doc_ext), recursive=True)  # compile path of files to .doc files
-        aa = [os.path.abspath(i) for i in a]
-        b = [os.path.abspath(i) for i in b]
+        #aa = [os.path.abspath(i) for i in a] #do not need this...
+        #b = [os.path.abspath(i) for i in b]
+        #print(a)
+        #print(aa)
         path_s = [os.path.splitext(i)[0] for i in b]
-        path_checks = [os.path.splitext(i)[0] for i in aa]
+        path_checks = [os.path.splitext(i)[0] for i in a]
         path_failed = [x for x in path_s if x not in path_checks]
     else:
+        print("Did not search for missing files")
         return None
     return path_failed
 
 path_failed = check_path()
+
 print(path_failed)
-for i in path_failed:
-    print(i)
+#for i in path_failed:
+    #print(i)
