@@ -7,6 +7,8 @@ path = input('Path to files to move:\n') #ask for path to apply the script
 #path_move = input('Path to move files to:\n')
 docx_ext = r'**/*.docx'
 doc_ext = r'**/*.doc'
+docx_extn = r'.docx'
+doc_extn = r'.doc'
 #y = os.path.join(path,docx_ext)
 #y = os.path.join(path,docx_ext)
 #y1 = os.path.join(path,file_type_to)
@@ -27,16 +29,19 @@ def check_path():
         path_checks = [os.path.splitext(i)[0] for i in path_docx]
         path_failed = [x for x in path_s if x not in path_checks] #check for filenames in path_s not in path_checks
         path_converted = [x for x in path_s if x in path_checks] #check for filenames in path_s not in path_checks
-        out_file1 = os.path.abspath("out{}.doc".format(path_failed))
-        out_file2 = os.path.abspath("out{}.docx".format(path_converted))
+        path_failed = [x+doc_extn for x in path_failed]
+        path_converted = [x + doc_extn for x in path_converted]
     else:
         print("Did not search for missing files")
         return None
-    return out_file1, out_file2
+    return path_failed, path_converted
 
 paths = check_path()
 print(paths[0])
 print(paths[1])
+
+for i in paths[0]:
+    print(i)
 
 #print(path_failed)
 #for i in path_failed:
