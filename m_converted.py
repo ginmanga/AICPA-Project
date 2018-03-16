@@ -3,7 +3,8 @@
 import glob
 import os
 #path = input('Path to files to move:\n') #ask for path to apply the script
-path = r'C:\Users\Panqiao\Documents\Research\AICPA\fdbgvkey'
+#path = r'C:\Users\Panqiao\Documents\Research\AICPA\fdbgvkey'
+path = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
 #file_type = input('Type:\n') #ask type of file to move
 #path_move = input('Path to move files to:\n')
 docx_ext = r'**/*.docx'
@@ -44,13 +45,14 @@ print(path_good)
 def move_good():
     """Call function to move bad files only"""
     #path_bad = input('Type path to move bad files\n')
-    path_bad = r'C:\Users\Panqiao\Documents\Research\AICPA\FDBG - DOC FILES'
+    #path_bad = r'C:\Users\Panqiao\Documents\Research\AICPA\FDBG - DOC FILES'
+    path_to = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY - MIX - DOC FILES'
     for i in path_good:
         tail = os.path.split(i)[1]
         #print(os.path.join(path_bad, tail))
 
         try:
-            os.rename(i, os.path.join(path_bad, tail))
+            os.rename(i, os.path.join(path_to, tail))
             print("Just moved %s" % (tail))
         except:
             print("Did not move %s" % (tail))
