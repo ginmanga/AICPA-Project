@@ -49,15 +49,11 @@ def move_good():
     path_to = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY - MIX - DOC FILES'
     for i in path_good:
         tail = os.path.split(i)[1]
-        #print(os.path.join(path_bad, tail))
-
         try:
             os.rename(i, os.path.join(path_to, tail))
             print("Just moved %s" % (tail))
         except:
             print("Did not move %s" % (tail))
-
-
 
 def move_bad():
     """Call function to move bad files only"""
@@ -65,7 +61,6 @@ def move_bad():
     path_bad = r'C:\Users\Panqiao\Documents\Research\AICPA\FDBG - PROBLEMS'
     for i in paths_bad:
         tail = os.path.split(i)[1]
-        #print(os.path.join(path_bad, tail))
         os.rename(i, os.path.join(path_bad, tail))
 
 
