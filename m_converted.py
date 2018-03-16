@@ -2,7 +2,8 @@
 #Find files that could not be converted and move them to a separate folder
 import glob
 import os
-path = input('Path to files to move:\n') #ask for path to apply the script
+#path = input('Path to files to move:\n') #ask for path to apply the script
+path = r'C:\Users\Panqiao\Documents\Research\AICPA\fdbgvkey'
 #file_type = input('Type:\n') #ask type of file to move
 #path_move = input('Path to move files to:\n')
 docx_ext = r'**/*.docx'
@@ -40,8 +41,20 @@ paths = check_path()
 print(paths[0])
 print(paths[1])
 
-for i in paths[0]:
-    print(i)
+def move_bad():
+    """Call function to move bad files only"""
+    #path_bad = input('Type path to move bad files\n')
+    path_bad = r'C:\Users\Panqiao\Documents\Research\AICPA\FDBG - DOC FILES'
+    for i in paths[0]:
+        tail = os.path.split(i)[1]
+        #print(os.path.join(path_bad, tail))
+        os.rename(i, os.path.join(path_bad, tail))
+
+
+#move_bad()
+
+#C:\Users\Panqiao\Documents\Research\AICPA\fdbgvkey
+#C:\Users\Panqiao\Documents\Research\AICPA\FDBG - DOC FILES
 
 #print(path_failed)
 #for i in path_failed:
