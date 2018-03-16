@@ -37,25 +37,35 @@ def check_path():
         return None
     return path_failed, path_converted
 
-paths = check_path()
-print(paths[0])
-print(paths[1])
+paths_bad, path_good = check_path()
+print(paths_bad)
+print(path_good)
+
+def move_good():
+    """Call function to move bad files only"""
+    #path_bad = input('Type path to move bad files\n')
+    path_bad = r'C:\Users\Panqiao\Documents\Research\AICPA\FDBG - DOC FILES'
+    for i in path_good:
+        tail = os.path.split(i)[1]
+        #print(os.path.join(path_bad, tail))
+
+        try:
+            os.rename(i, os.path.join(path_bad, tail))
+            print("Just moved %s" % (tail))
+        except:
+            print("Did not move %s" % (tail))
+
+
 
 def move_bad():
     """Call function to move bad files only"""
     #path_bad = input('Type path to move bad files\n')
-    path_bad = r'C:\Users\Panqiao\Documents\Research\AICPA\FDBG - DOC FILES'
-    for i in paths[0]:
+    path_bad = r'C:\Users\Panqiao\Documents\Research\AICPA\FDBG - PROBLEMS'
+    for i in paths_bad:
         tail = os.path.split(i)[1]
         #print(os.path.join(path_bad, tail))
         os.rename(i, os.path.join(path_bad, tail))
 
 
 #move_bad()
-
-#C:\Users\Panqiao\Documents\Research\AICPA\fdbgvkey
-#C:\Users\Panqiao\Documents\Research\AICPA\FDBG - DOC FILES
-
-#print(path_failed)
-#for i in path_failed:
-   # print(i)
+move_good()
