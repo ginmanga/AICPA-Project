@@ -1,21 +1,39 @@
 """ Script to read AICPA Word Files"""
-# Parse word files and separate them into individual documents
-# Save individual files as txt for data gathering
+# First gather identifying data and place it into a spreadsheet
 import os
+import zipfile
+try:
+    from xml.etree.cElementTree import XML
+except ImportError:
+    from xml.etree.ElementTree import XML
 
-path_1 = "C:/Users/Panqiao/Documents/Research/AICPA/Files to separate/NO GVKEY"
-#print(os.listdir(path_1))
-#lpath_l = os.listdir(path_1)
-#for i in lpath_l:
-    #print(i)
 
+file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
+file_experiment = os.path.abspath(file_experiment)
 
-tp = "C:/Users/Panqiao/Documents/Research/AICPA/Files to separate/NO GVKEY/Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.doc"
+#WORD_NAMESPACE = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+WORD_NAMESPACE = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+PARA = WORD_NAMESPACE + 'p'
+TEXT = WORD_NAMESPACE + 't'
+print(PARA)
 
-fhand = open(tp)
-i = 0
-for line in fhand:
-    print(line)
-    i+=1
-    if i > 50:
-        break
+def get_docx_text(path):
+    """
+    Take the path of a docx file as argument, return the text in unicode.
+    """
+    document = zipfile.ZipFile(path)
+    xml_content = document.read('word/document.xml')
+    document.close()
+    tree = XML(xml_content)
+
+    paragraphs = []
+    for paragraph in tree.getiterator(PARA):
+        texts = [node.text
+                 for node in paragraph.getiterator(TEXT)
+                 if node.text]
+        if texts:
+            paragraphs.append(''.join(texts))
+
+    return '\n\n'.join(paragraphs)
+
+print(get_docx_text(file_experiment))
