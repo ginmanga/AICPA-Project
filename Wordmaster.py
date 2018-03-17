@@ -15,7 +15,9 @@ file_experiment = os.path.abspath(file_experiment)
 WORD_NAMESPACE = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 PARA = WORD_NAMESPACE + 'p'
 TEXT = WORD_NAMESPACE + 't'
-print(PARA)
+TABLE = WORD_NAMESPACE + 'tbl'
+ROW = WORD_NAMESPACE + 'tr'
+CELL = WORD_NAMESPACE + 'tc'
 
 def get_docx_text(path):
     """
@@ -25,15 +27,39 @@ def get_docx_text(path):
     xml_content = document.read('word/document.xml')
     document.close()
     tree = XML(xml_content)
+    print(tree)
 
     paragraphs = []
     for paragraph in tree.getiterator(PARA):
+        #print(paragraph)
         texts = [node.text
                  for node in paragraph.getiterator(TEXT)
                  if node.text]
-        if texts:
-            paragraphs.append(''.join(texts))
+        #print(texts)
+        #if texts:
+            #paragraphs.append(''.join(texts))
+    for text in tree.getiterator(TEXT):
+        texts = [node.text
+                 for node in text.getiterator(TEXT)
+                 if node.text]
+        #print(texts)
+    for table in tree.getiterator(TABLE):
+        for row in table.iter(ROW):
+            print(''.join(node.text for node in cell.iter(TEXT)))
+            #for cell in row.iter(CELL):
+                #print(''.join(node.text for node in cell.iter(TEXT)))
+        #print(texts)
 
     return '\n\n'.join(paragraphs)
 
-print(get_docx_text(file_experiment))
+
+get_docx_text(file_experiment)
+#xml_content = document.read('word/document.xml')
+#tree = XML(xml_content)
+#print(get_docx_text(file_experiment))
+#print(type(get_docx_text(file_experiment)))
+#print(dir(get_docx_text(file_experiment)))
+#for i in dir(get_docx_text(file_experiment)):
+    #print(i)
+#for i in tree.get_docx_text(file_experiment):
+    #print(i)
