@@ -1,7 +1,8 @@
 """ Script to read AICPA Word Files"""
 # First gather identifying data and place it into a spreadsheet
 import os
-from docx import Document
+import docx
+#from docx import Document
 file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
 file_experiment = os.path.abspath(file_experiment)
 
