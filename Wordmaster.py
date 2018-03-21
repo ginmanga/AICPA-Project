@@ -11,9 +11,13 @@ sections = file_test.sections
 #print(file_test.paragraphs[7].text == '')
 #print(file_test.paragraphs[7].text.isspace())
 print(len(sections))
-#for i in dir(file_test.sections.count):
-    #print(i)
-#print("HHHHHHHHHHHEEERR")
+print(sections[9])
+for i in dir(file_test):
+    print(i)
+print("HHHHHHHHHHHEEERR")
+for i in dir(sections):
+    print(i)
+print("HHHHHHHHHHHEEERR")
 #print(file_test.paragraphs[3])
 
 def getText(filename):
