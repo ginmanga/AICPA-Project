@@ -7,18 +7,30 @@ file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\
 file_experiment = os.path.abspath(file_experiment)
 file_test = docx.Document(file_experiment)
 sections = file_test.sections
+paras = file_test.paragraphs
 
-#print(file_test.paragraphs[7].text == '')
-#print(file_test.paragraphs[7].text.isspace())
-print(len(sections))
-print(sections[9])
-for i in dir(file_test):
-    print(i)
-print("HHHHHHHHHHHEEERR")
-for i in dir(sections):
-    print(i)
-print("HHHHHHHHHHHEEERR")
+
+#print(len(sections))
+#print(len(paras))
+#print(sections[9])
+#for i in dir(file_test):
+    #print(i)
+#print("HHHHHHHHHHHEEERR")
+#for i in dir(sections):
+    #print(i)
+#print("HHHHHHHHHHHEEERR")
 #print(file_test.paragraphs[3])
+#print(paras[7].style.name)
+#for i in paras:
+
+count = 0
+#def iter_headings(paragraphs):
+    #for paragraph in paragraphs:
+        #print(paragraph.style.name)
+        #if paragraph.style.name.startswith('Heading'):
+           #count += 1
+           #print(count)
+
 
 def getText(filename):
     doc = docx.Document(filename)
@@ -33,6 +45,7 @@ for i in file_test.paragraphs:
     if i.text != '' and i.text.isspace() == False:
         print(i.text)
         print(count)
+    if count>200:
         break
     count += 1
 #for i in file_test.sections:
