@@ -7,8 +7,20 @@ file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\
 file_experiment = os.path.abspath(file_experiment)
 file_test = docx.Document(file_experiment)
 
-print(file_test[1])
+print(type(file_test.paragraphs[3].text))
+print(file_test.paragraphs[3])
 
+def getText(filename):
+    doc = docx.Document(filename)
+    fullText = []
+    for para in doc.paragraphs:
+        fullText.append(para.text)
+    return '\n'.join(fullText)
+file_text = getText(file_experiment)
+print(file_text[0:500])
+
+#for i in file_test.paragraphs:
+    #print(i.text)
 
 
 
