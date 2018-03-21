@@ -7,8 +7,11 @@ file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\
 file_experiment = os.path.abspath(file_experiment)
 file_test = docx.Document(file_experiment)
 
-print(type(file_test.paragraphs[3].text))
-print(file_test.paragraphs[3])
+print(file_test.paragraphs[7].text == '')
+print(file_test.paragraphs[7].text.isspace())
+
+#print()
+#print(file_test.paragraphs[3])
 
 def getText(filename):
     doc = docx.Document(filename)
@@ -16,12 +19,15 @@ def getText(filename):
     for para in doc.paragraphs:
         fullText.append(para.text)
     return '\n'.join(fullText)
-file_text = getText(file_experiment)
-print(file_text[0:500])
-
-#for i in file_test.paragraphs:
-    #print(i.text)
-
+#file_text = getText(file_experiment)
+#print(file_text[0:500])
+count = 0
+for i in file_test.paragraphs:
+    if i.text != '' and i.text.isspace() == False:
+        print(i.text)
+        print(count)
+        break
+    count += 1
 
 
 
