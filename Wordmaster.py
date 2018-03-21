@@ -5,9 +5,9 @@ import docx
 #from docx import Document
 file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
 file_experiment = os.path.abspath(file_experiment)
+file_test = docx.Document(file_experiment)
 
-
-print("hello")
+print(file_test[1])
 
 
 
@@ -24,51 +24,51 @@ print("hello")
 #file_experiment = os.path.abspath(file_experiment)
 
 #WORD_NAMESPACE = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
-WORD_NAMESPACE = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
-PARA = WORD_NAMESPACE + 'p'
-TEXT = WORD_NAMESPACE + 't'
-TABLE = WORD_NAMESPACE + 'tbl'
-ROW = WORD_NAMESPACE + 'tr'
-CELL = WORD_NAMESPACE + 'tc'
-HEADER = WORD_NAMESPACE + 'headerReference'
-TOP = WORD_NAMESPACE + 'top'
-SECT = WORD_NAMESPACE + 'sectPr'
-HEAD = WORD_NAMESPACE + 'hdr'
+#WORD_NAMESPACE = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+#PARA = WORD_NAMESPACE + 'p'
+#TEXT = WORD_NAMESPACE + 't'
+#TABLE = WORD_NAMESPACE + 'tbl'
+#ROW = WORD_NAMESPACE + 'tr'
+#CELL = WORD_NAMESPACE + 'tc'
+#HEADER = WORD_NAMESPACE + 'headerReference'
+#TOP = WORD_NAMESPACE + 'top'
+#SECT = WORD_NAMESPACE + 'sectPr'
+#HEAD = WORD_NAMESPACE + 'hdr'
 
 
-def get_docx_text(path):
-    document = zipfile.ZipFile(path)
+#def get_docx_text(path):
+    #document = zipfile.ZipFile(path)
     #for i in dir(document):
         #print(i)
     #print(document.filelist)
     #for i in document.filelist:
         #print(i)
-    xml_content = document.read('word/document.xml')
-    xml_header = document.read('word/header9.xml')
-    print(xml_header)
-    document.close()
-    tree = XML(xml_content)
-    tree1 = XML(xml_header)
+    #xml_content = document.read('word/document.xml')
+    #xml_header = document.read('word/header9.xml')
+    #print(xml_header)
+    #document.close()
+    #tree = XML(xml_content)
+    #tree1 = XML(xml_header)
     #for i in dir(tree.iter(PARA)):
         #print(i)
     #for i in tree.iter(SECT):
         #print(i.text)
         #for e in i.iter():
             #print(e)
-    paragraphs = []
+    #paragraphs = []
     #for i in tree1.iter(TEXT):
         #print(i.text)
     #for i in tree.iter(PARA):
         #for e in i.iter(SECT):
             #print(e.attrib)
-    for paragraph in tree.getiterator(PARA):
-        texts = [node.text
-                 for node in paragraph.getiterator(TEXT)
-                 if node.text]
-        if texts:
-            paragraphs.append(''.join(texts))
+    #for paragraph in tree.getiterator(PARA):
+        #texts = [node.text
+                 #for node in paragraph.getiterator(TEXT)
+                 #if node.text]
+        #if texts:
+            #paragraphs.append(''.join(texts))
 
-    return '\n\n'.join(paragraphs)
+    #return '\n\n'.join(paragraphs)
 
 #for i in getiterator.get_docx_text(file_experiment):
     #print(i)
