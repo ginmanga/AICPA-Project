@@ -6,11 +6,14 @@ import docx
 file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
 file_experiment = os.path.abspath(file_experiment)
 file_test = docx.Document(file_experiment)
+sections = file_test.sections
 
-print(file_test.paragraphs[7].text == '')
-print(file_test.paragraphs[7].text.isspace())
-
-#print()
+#print(file_test.paragraphs[7].text == '')
+#print(file_test.paragraphs[7].text.isspace())
+print(len(sections))
+#for i in dir(file_test.sections.count):
+    #print(i)
+#print("HHHHHHHHHHHEEERR")
 #print(file_test.paragraphs[3])
 
 def getText(filename):
@@ -28,7 +31,12 @@ for i in file_test.paragraphs:
         print(count)
         break
     count += 1
-
+#for i in file_test.sections:
+    #if i.text != '' and i.text.isspace() == False:
+        #print(i.text)
+        #print(count)
+        #break
+    #count += 1
 
 
 #import zipfile
