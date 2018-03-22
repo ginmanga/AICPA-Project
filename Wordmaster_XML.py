@@ -1,14 +1,66 @@
 import docx2txt
+import zipfile
+import re
 import os
+import xml.etree.ElementTree as ET
+nsmap = {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
 file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
 file_experiment = os.path.abspath(file_experiment)
 
-text = docx2txt.process(file_experiment)
-print(text)
+#text = docx2txt.process(file_experiment)
+#print(text)
 
 
+document = zipfile.ZipFile(file_experiment)
+filelist = document.namelist()
+#for i in filelist:
+    #print(i)
 
 
+def qn(tag):
+    """
+    Stands for 'qualified name', a utility function to turn a namespace
+    prefixed tag name into a Clark-notation qualified tag name for lxml. For
+    example, ``qn('p:cSld')`` returns ``'{http://schemas.../main}cSld'``.
+    Source: https://github.com/python-openxml/python-docx/
+    """
+    prefix, tagroot = tag.split(':')
+    uri = nsmap[prefix]
+    return '{{{}}}{}'.format(uri, tagroot)
+
+
+def xml2text(xml):
+    """
+    A string representing the textual content of this run, with content
+    child elements like ``<w:tab/>`` translated to their Python
+    equivalent.
+    Adapted from: https://github.com/python-openxml/python-docx/
+    """
+    text = u''
+    root = ET.fromstring(xml)
+    for child in root.iter():
+        print(child)
+        if child.tag == qn('w:t'):
+            t_text = child.text
+            text += t_text if t_text is not None else ''
+        elif child.tag == qn('w:tab'):
+            text += '\t'
+        elif child.tag in (qn('w:br'), qn('w:cr')):
+            text += '\n'
+        elif child.tag == qn("w:p"):
+            text += '\n\n'
+    print(child.tag)
+    return text
+
+text = u''
+header_xmls = 'word/header[0-9]*.xml'
+for fname in filelist:
+    if re.match(header_xmls, fname):
+        print(fname)
+        print(xml2text(document.read(fname)))
+        text += xml2text(document.read(fname))
+
+#print(text)
 
 #import zipfile
 #try:
