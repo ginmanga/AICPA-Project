@@ -1,8 +1,20 @@
-import zipfile
-try:
-    from xml.etree.cElementTree import XML
-except ImportError:
-    from xml.etree.ElementTree import XML
+import docx2txt
+import os
+file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
+file_experiment = os.path.abspath(file_experiment)
+
+text = docx2txt.process(file_experiment)
+print(text)
+
+
+
+
+
+#import zipfile
+#try:
+    #from xml.etree.cElementTree import XML
+#except ImportError:
+    #from xml.etree.ElementTree import XML
 
 
 file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
@@ -39,7 +51,7 @@ def get_docx_text(path):
     for i in tree.iter(SECT):
         print(i.text)
         for e in i.iter():
-            #print(e)
+            print(e)
     paragraphs = []
     for i in tree1.iter(TEXT):
         print(i.text)
@@ -55,7 +67,7 @@ def get_docx_text(path):
 
     return '\n\n'.join(paragraphs)
 
-for i in getiterator.get_docx_text(file_experiment):
-    print(i)
-get_docx_text(file_experiment)
-print(get_docx_text(file_experiment))
+#for i in getiterator.get_docx_text(file_experiment):
+    #print(i)
+#get_docx_text(file_experiment)
+#print(get_docx_text(file_experiment))
