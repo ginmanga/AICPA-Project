@@ -53,6 +53,8 @@ def fnd(paragraphs, terms):
 #directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
 #directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
 directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
+directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
+directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
 #print(os.listdir(directory))
 #print(os.path.isdir(directory))
 los = ['of', 'DOCUMENTS']
@@ -77,24 +79,20 @@ def fipath(gvkey, path):
         file_name = os.path.splitext(os.path.basename(path))[0]
         # get file name without path or extension
         a = fsttotal(path, file_name)
-        #print(os.path.splitext(path)[0])
         return a
     except:
         None
     for file in os.listdir(path):
+        #Loops through files and folders in path
         file_path_a = os.path.join(path, file)
-        #print(file_path_a)
-        file_path_a = os.path.join(path, file)
-        #print(os.path.isdir(file_path))
         if os.path.isdir(file_path_a) == True:
-            #print(os.listdir(file_path_a))
             for i in os.listdir(file_path_a):
                 #print(i)
                 file_path_open = os.path.join(file_path_a, i)
                 #print(file_path_open)
-                a = fsttotal(file_path_open)
+                a = fsttotal(file_path_open, os.path.splitext(i)[0])
         else:
-            a = fsttotal(file_path_a)
+            a = fsttotal(file_path_a, os.path.splitext(file)[0])
     return a
 
 print(fipath(0, directory))
