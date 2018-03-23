@@ -51,33 +51,32 @@ def fnd(paragraphs, terms):
 #directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
 #directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
 #directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
-directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
+#directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
 directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
 #print(os.listdir(directory))
-print(os.path.isdir(directory))
+#print(os.path.isdir(directory))
 los = ['of', 'DOCUMENTS']
 
 
 
-def fsttotal(file_path):
+def fsttotal(file_path, file_name):
     """Function to find start and total documents"""
+    a = [file_name]
+    print(a)
     file_doc = docx.Document(file_path)
     print("MAAAADDDEE")
     paras = file_doc.paragraphs
-    a = fnd(paras, los)
+    a.extend(fnd(paras, los))
     return a
-    #print(a[0])
-    #print(a[1])
 
 def fipath(gvkey, path):
     """Function delivers path to files to open"""
-    #for file in os.listdir(path):
-    #for file in files:
     path = os.path.abspath(path)
-    d = os.path.splitext(os.path.basename(path))[0] #get file name without path or extension
 
     try:
-        a = fsttotal(path)
+        file_name = os.path.splitext(os.path.basename(path))[0]
+        # get file name without path or extension
+        a = fsttotal(path, file_name)
         #print(os.path.splitext(path)[0])
         return a
     except:
