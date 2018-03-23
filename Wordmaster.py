@@ -3,31 +3,19 @@
 import os
 import docx
 import glob
-
-#file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
-#file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY\2898\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-08_14-46.docx'
-#file_experiment = os.path.abspath(file_experiment)
-
-
-
 def getText(filename):
     """Function gathers text fom docx file"""
     #Will add a variable that takes the list of paragraph numbers within the file
     #And looks for the needed text to gather data
-
     doc = docx.Document(filename)
     fullText = []
     for para in doc.paragraphs:
         fullText.append(para.text)
     return '\n'.join(fullText)
 
-
-
-
 def fnd(paragraphs, terms):
     """Given a string of characters find paragraph numbers of each case"""
     #For AICPA files, look for number of number DOCUMENT
-    #print("MAAAADDDEE")
     count_par = 0
     count_doc = 0
     list_paras = []
@@ -37,29 +25,16 @@ def fnd(paragraphs, terms):
         dc = any(char.isdigit() for char in i.text)
         c_list = [fc, sc, dc]
         if all(cond == True for cond in c_list):
-            #print(i.text)
-            #print(count_par)
             list_paras.append(count_par)
             count_doc += 1
-            #print(count_doc)
         count_par += 1
     return count_doc, list_paras
 
-#a = fnd(paras, los)
-
-
-#directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
-#directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
-#directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
-#directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
 directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
 directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
 directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
-#print(os.listdir(directory))
-#print(os.path.isdir(directory))
+directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
 los = ['of', 'DOCUMENTS']
-
-
 
 def fsttotal(file_path, file_name):
     """Function to find start and total documents"""
@@ -74,7 +49,6 @@ def fsttotal(file_path, file_name):
 def fipath(gvkey, path):
     """Function delivers path to files to open"""
     path = os.path.abspath(path)
-
     try:
         file_name = os.path.splitext(os.path.basename(path))[0]
         # get file name without path or extension
@@ -84,39 +58,14 @@ def fipath(gvkey, path):
         None
     for file in os.listdir(path):
         #Loops through files and folders in path
+        #calls fsttotal function
         file_path_a = os.path.join(path, file)
         if os.path.isdir(file_path_a) == True:
             for i in os.listdir(file_path_a):
-                #print(i)
                 file_path_open = os.path.join(file_path_a, i)
-                #print(file_path_open)
                 a = fsttotal(file_path_open, os.path.splitext(i)[0])
         else:
             a = fsttotal(file_path_a, os.path.splitext(file)[0])
     return a
 
 print(fipath(0, directory))
-
-
-#path = glob.glob('C:\\Users\\Panqiao\\Documents\\Research\\AICPA\\Files to separate\\GVKEY\\**/*.doc', recursive=False)
-#s = r'C:\\Users\\Panqiao\\Documents\\Research\\AICPA\\Files to separate\\GVKEY\\**/*.doc'
-#print(s)
-#**/*.docx
-#path = glob.glob(y, recursive = True)
-
-#file_test = docx.Document(file_experiment)
-
-#paras = file_test.paragraphs
-#directory_a = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
-#print(os.listdir(directory_a))
-
-#print(paras[9].text)
-#print(any(char.isdigit() for char in paras[9].text))
-#for i in paras:
-#    if i.text != '' and i.text.isspace() == False:
-#        None
-        #print(i.text)
-        #print(count)
-#    if count>200:
-#        break
-#    count += 1
