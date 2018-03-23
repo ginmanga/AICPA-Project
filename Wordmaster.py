@@ -51,8 +51,8 @@ def fnd(paragraphs, terms):
 #directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
 #directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
 #directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
-directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
 directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
+directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
 #print(os.listdir(directory))
 print(os.path.isdir(directory))
 los = ['of', 'DOCUMENTS']
@@ -65,35 +65,40 @@ def fsttotal(file_path):
     print("MAAAADDDEE")
     paras = file_doc.paragraphs
     a = fnd(paras, los)
-    print(a[0])
-    print(a[1])
+    return a
+    #print(a[0])
+    #print(a[1])
 
 def fipath(gvkey, path):
     """Function delivers path to files to open"""
     #for file in os.listdir(path):
     #for file in files:
+    path = os.path.abspath(path)
+    d = os.path.splitext(os.path.basename(path))[0] #get file name without path or extension
+
     try:
-        return fsttotal(path)
+        a = fsttotal(path)
+        #print(os.path.splitext(path)[0])
+        return a
     except:
         None
     for file in os.listdir(path):
         file_path_a = os.path.join(path, file)
-        print(file_path_a)
+        #print(file_path_a)
         file_path_a = os.path.join(path, file)
         #print(os.path.isdir(file_path))
         if os.path.isdir(file_path_a) == True:
-            print(os.listdir(file_path_a))
+            #print(os.listdir(file_path_a))
             for i in os.listdir(file_path_a):
                 #print(i)
                 file_path_open = os.path.join(file_path_a, i)
-                print(file_path_open)
-                fsttotal(file_path_open)
+                #print(file_path_open)
+                a = fsttotal(file_path_open)
         else:
-            fsttotal(file_path_a)
+            a = fsttotal(file_path_a)
+    return a
 
-
-
-fipath(0, directory)
+print(fipath(0, directory))
 
 
 #path = glob.glob('C:\\Users\\Panqiao\\Documents\\Research\\AICPA\\Files to separate\\GVKEY\\**/*.doc', recursive=False)
