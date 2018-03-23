@@ -8,32 +8,21 @@ import glob
 #file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY\2898\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-08_14-46.docx'
 #file_experiment = os.path.abspath(file_experiment)
 
-#file_test = docx.Document(file_experiment)
 
-#paras = file_test.paragraphs
-#directory_a = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
-#print(os.listdir(directory_a))
-
-#print(paras[9].text)
-#print(any(char.isdigit() for char in paras[9].text))
 
 def getText(filename):
+    """Function gathers text fom docx file"""
+    #Will add a variable that takes the list of paragraph numbers within the file
+    #And looks for the needed text to gather data
+
     doc = docx.Document(filename)
     fullText = []
     for para in doc.paragraphs:
         fullText.append(para.text)
     return '\n'.join(fullText)
 
-count = 0
 
-#for i in paras:
-#    if i.text != '' and i.text.isspace() == False:
-#        None
-        #print(i.text)
-        #print(count)
-#    if count>200:
-#        break
-#    count += 1
+
 
 def fnd(paragraphs, terms):
     """Given a string of characters find paragraph numbers of each case"""
@@ -66,11 +55,7 @@ print(os.path.isdir(directory))
 los = ['of', 'DOCUMENTS']
 
 
-#path = glob.glob('C:\\Users\\Panqiao\\Documents\\Research\\AICPA\\Files to separate\\GVKEY\\**/*.doc', recursive=False)
-#s = r'C:\\Users\\Panqiao\\Documents\\Research\\AICPA\\Files to separate\\GVKEY\\**/*.doc'
-#print(s)
-#**/*.docx
-#path = glob.glob(y, recursive = True)
+
 def fsttotal(file_path):
     """Function to find start and total documents"""
     file_doc = docx.Document(file_path)
@@ -96,3 +81,27 @@ def parse_AICPA(gvkey, path):
 
 
 parse_AICPA(0, directory)
+
+
+#path = glob.glob('C:\\Users\\Panqiao\\Documents\\Research\\AICPA\\Files to separate\\GVKEY\\**/*.doc', recursive=False)
+#s = r'C:\\Users\\Panqiao\\Documents\\Research\\AICPA\\Files to separate\\GVKEY\\**/*.doc'
+#print(s)
+#**/*.docx
+#path = glob.glob(y, recursive = True)
+
+#file_test = docx.Document(file_experiment)
+
+#paras = file_test.paragraphs
+#directory_a = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
+#print(os.listdir(directory_a))
+
+#print(paras[9].text)
+#print(any(char.isdigit() for char in paras[9].text))
+#for i in paras:
+#    if i.text != '' and i.text.isspace() == False:
+#        None
+        #print(i.text)
+        #print(count)
+#    if count>200:
+#        break
+#    count += 1
