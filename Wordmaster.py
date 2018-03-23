@@ -5,9 +5,11 @@ import docx
 import glob
 
 file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
+file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY\2898\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-08_14-46.docx'
 file_experiment = os.path.abspath(file_experiment)
+
 file_test = docx.Document(file_experiment)
-#sections = file_test.sections
+
 paras = file_test.paragraphs
 
 directory_a = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
@@ -39,6 +41,7 @@ los = ['of', 'DOCUMENTS']
 def fnd(paragraphs, terms):
     """Given a string of characters find paragraph numbers of each case"""
     #For AICPA files, look for number of number DOCUMENT
+    #print("MAAAADDDEE")
     count_par = 0
     count_doc = 0
     list_paras = []
@@ -60,12 +63,6 @@ def fnd(paragraphs, terms):
 
 a = fnd(paras, los)
 
-#b = [0 , 0 ,0]
-#bb = [0 ,1, 0]
-
-#print(all(i == 0 for i in bb))
-#print(a[0])
-#print(a[1])
 
 #directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
 directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
@@ -82,29 +79,39 @@ los = ['of', 'DOCUMENTS']
 def fsttotal(file_path):
     """Function to find start and total documents"""
     file_doc = docx.Document(file_path)
+    print("MAAAADDDEE")
     paras = file_doc.paragraphs
     a = fnd(paras, los)
     print(a[0])
 
 def parse_AICPA(gvkey, path):
     for file in os.listdir(path):
-        file_path = os.path.join(path, file)
-        print(file_path)
-        print(os.path.isdir(file_path))
-        if os.path.isdir(file_path) == True:
-            
+        file_path_a = os.path.join(path, file)
+        print(file_path_a)
+        #print(os.path.isdir(file_path))
+        if os.path.isdir(file_path_a) == True:
+            print(os.listdir(file_path_a))
+            for i in os.listdir(file_path_a):
+                #print(i)
+                file_path_open = os.path.join(file_path_a, i)
+                print(file_path_open)
+                fsttotal(file_path_open)
+
+
+
 
 
 
 parse_AICPA(0, directory)
 
 
-def parse_AICPA(gvkey, path, sub):
-    if sub == 1:
-        file_type = r'**/*.docx'
-        path = os.path.join(path, file_type)
-        path = glob.glob(path, recursive=True)
-        print(path)
+def parse_AICPA_1(gvkey, path, sub):
+    """Function delivers path to files to open"""
+    #if sub == 1:
+        #file_type = r'**/*.docx'
+        #path = os.path.join(path, file_type)
+        #path = glob.glob(path, recursive=True)
+        #print(path)
 
     if sub == 0:
         for file in os.listdir(path):
