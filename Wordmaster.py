@@ -49,9 +49,11 @@ def fnd(paragraphs, terms):
 
 
 #directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
+#directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
+#directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
+directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
 directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
-directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
-print(os.listdir(directory))
+#print(os.listdir(directory))
 print(os.path.isdir(directory))
 los = ['of', 'DOCUMENTS']
 
@@ -68,9 +70,16 @@ def fsttotal(file_path):
 
 def fipath(gvkey, path):
     """Function delivers path to files to open"""
+    #for file in os.listdir(path):
+    #for file in files:
+    try:
+        return fsttotal(path)
+    except:
+        None
     for file in os.listdir(path):
         file_path_a = os.path.join(path, file)
         print(file_path_a)
+        file_path_a = os.path.join(path, file)
         #print(os.path.isdir(file_path))
         if os.path.isdir(file_path_a) == True:
             print(os.listdir(file_path_a))
