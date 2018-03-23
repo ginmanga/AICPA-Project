@@ -50,6 +50,7 @@ def fnd(paragraphs, terms):
 
 #directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
 directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
+directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
 print(os.listdir(directory))
 print(os.path.isdir(directory))
 los = ['of', 'DOCUMENTS']
@@ -65,7 +66,7 @@ def fsttotal(file_path):
     print(a[0])
     print(a[1])
 
-def parse_AICPA(gvkey, path):
+def fipath(gvkey, path):
     """Function delivers path to files to open"""
     for file in os.listdir(path):
         file_path_a = os.path.join(path, file)
@@ -78,9 +79,12 @@ def parse_AICPA(gvkey, path):
                 file_path_open = os.path.join(file_path_a, i)
                 print(file_path_open)
                 fsttotal(file_path_open)
+        else:
+            fsttotal(file_path_a)
 
 
-parse_AICPA(0, directory)
+
+fipath(0, directory)
 
 
 #path = glob.glob('C:\\Users\\Panqiao\\Documents\\Research\\AICPA\\Files to separate\\GVKEY\\**/*.doc', recursive=False)
