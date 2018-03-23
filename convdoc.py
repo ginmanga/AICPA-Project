@@ -31,7 +31,6 @@ path_check = glob.glob(y1, recursive = True)
 def check_path(a,b):
     """Check file to check if converted"""
     #If it has been converted, then erase from path
-    #print(a)
     #ask = input('Do you want to check if files have been converted before? Write yes or no\n')
     ask = 'yes'
     if ask == 'yes':
