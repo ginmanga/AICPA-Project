@@ -4,15 +4,14 @@ import os
 import docx
 import glob
 
-file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
-file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY\2898\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-08_14-46.docx'
-file_experiment = os.path.abspath(file_experiment)
+#file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
+#file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY\2898\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-08_14-46.docx'
+#file_experiment = os.path.abspath(file_experiment)
 
-file_test = docx.Document(file_experiment)
+#file_test = docx.Document(file_experiment)
 
-paras = file_test.paragraphs
-
-directory_a = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
+#paras = file_test.paragraphs
+#directory_a = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
 #print(os.listdir(directory_a))
 
 #print(paras[9].text)
@@ -27,16 +26,14 @@ def getText(filename):
 
 count = 0
 
-for i in paras:
-    if i.text != '' and i.text.isspace() == False:
-        None
+#for i in paras:
+#    if i.text != '' and i.text.isspace() == False:
+#        None
         #print(i.text)
         #print(count)
-    if count>200:
-        break
-    count += 1
-
-los = ['of', 'DOCUMENTS']
+#    if count>200:
+#        break
+#    count += 1
 
 def fnd(paragraphs, terms):
     """Given a string of characters find paragraph numbers of each case"""
@@ -50,8 +47,6 @@ def fnd(paragraphs, terms):
         sc = terms[1] in i.text
         dc = any(char.isdigit() for char in i.text)
         c_list = [fc, sc, dc]
-
-        #if fc == True and sc == True:
         if all(cond == True for cond in c_list):
             #print(i.text)
             #print(count_par)
@@ -61,7 +56,7 @@ def fnd(paragraphs, terms):
         count_par += 1
     return count_doc, list_paras
 
-a = fnd(paras, los)
+#a = fnd(paras, los)
 
 
 #directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
@@ -83,8 +78,10 @@ def fsttotal(file_path):
     paras = file_doc.paragraphs
     a = fnd(paras, los)
     print(a[0])
+    print(a[1])
 
 def parse_AICPA(gvkey, path):
+    """Function delivers path to files to open"""
     for file in os.listdir(path):
         file_path_a = os.path.join(path, file)
         print(file_path_a)
@@ -98,33 +95,4 @@ def parse_AICPA(gvkey, path):
                 fsttotal(file_path_open)
 
 
-
-
-
-
 parse_AICPA(0, directory)
-
-
-def parse_AICPA_1(gvkey, path, sub):
-    """Function delivers path to files to open"""
-    #if sub == 1:
-        #file_type = r'**/*.docx'
-        #path = os.path.join(path, file_type)
-        #path = glob.glob(path, recursive=True)
-        #print(path)
-
-    if sub == 0:
-        for file in os.listdir(path):
-            file_path = os.path.join(directory_a, file)
-            print(file)
-            file_doc = docx.Document(file_path)
-            paras = file_doc.paragraphs
-            a = fnd(paras, los)
-            print(a[0])
-
-#for i in file_test.sections:
-    #if i.text != '' and i.text.isspace() == False:
-        #print(i.text)
-        #print(count)
-        #break
-    #count += 1
