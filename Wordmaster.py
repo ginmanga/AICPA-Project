@@ -2,7 +2,8 @@
 # First gather identifying data and place it into a spreadsheet
 import os
 import docx
-#from docx import Document
+import glob
+
 file_experiment = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
 file_experiment = os.path.abspath(file_experiment)
 file_test = docx.Document(file_experiment)
@@ -12,8 +13,8 @@ paras = file_test.paragraphs
 directory_a = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
 #print(os.listdir(directory_a))
 
-print(paras[9].text)
-print(any(char.isdigit() for char in paras[9].text))
+#print(paras[9].text)
+#print(any(char.isdigit() for char in paras[9].text))
 
 def getText(filename):
     doc = docx.Document(filename)
@@ -21,10 +22,9 @@ def getText(filename):
     for para in doc.paragraphs:
         fullText.append(para.text)
     return '\n'.join(fullText)
-#file_text = getText(file_experiment)
-#print(file_text[0:500])
+
 count = 0
-#for i in file_test.paragraphs:
+
 for i in paras:
     if i.text != '' and i.text.isspace() == False:
         None
@@ -67,22 +67,53 @@ a = fnd(paras, los)
 #print(a[0])
 #print(a[1])
 
-directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
-#print(os.listdir(directory_a))
+#directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
+directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
+print(os.listdir(directory))
+print(os.path.isdir(directory))
 los = ['of', 'DOCUMENTS']
 
 
+#path = glob.glob('C:\\Users\\Panqiao\\Documents\\Research\\AICPA\\Files to separate\\GVKEY\\**/*.doc', recursive=False)
+#s = r'C:\\Users\\Panqiao\\Documents\\Research\\AICPA\\Files to separate\\GVKEY\\**/*.doc'
+#print(s)
+#**/*.docx
+#path = glob.glob(y, recursive = True)
+def fsttotal(file_path):
+    """Function to find start and total documents"""
+    file_doc = docx.Document(file_path)
+    paras = file_doc.paragraphs
+    a = fnd(paras, los)
+    print(a[0])
 
 def parse_AICPA(gvkey, path):
     for file in os.listdir(path):
-        file_path = os.path.join(directory_a, file)
-        print(file)
-        file_doc = docx.Document(file_path)
-        paras = file_doc.paragraphs
-        a = fnd(paras, los)
-        print(a[0])
+        file_path = os.path.join(path, file)
+        print(file_path)
+        print(os.path.isdir(file_path))
+        if os.path.isdir(file_path) == True:
+            
+
+
 
 parse_AICPA(0, directory)
+
+
+def parse_AICPA(gvkey, path, sub):
+    if sub == 1:
+        file_type = r'**/*.docx'
+        path = os.path.join(path, file_type)
+        path = glob.glob(path, recursive=True)
+        print(path)
+
+    if sub == 0:
+        for file in os.listdir(path):
+            file_path = os.path.join(directory_a, file)
+            print(file)
+            file_doc = docx.Document(file_path)
+            paras = file_doc.paragraphs
+            a = fnd(paras, los)
+            print(a[0])
 
 #for i in file_test.sections:
     #if i.text != '' and i.text.isspace() == False:
