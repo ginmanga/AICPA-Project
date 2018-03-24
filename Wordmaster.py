@@ -41,7 +41,7 @@ def fsttotal(file_path, file_name):
     a = [file_name]
     print(a)
     file_doc = docx.Document(file_path)
-    print("MAAAADDDEE")
+    #print("MAAAADDDEE")
     paras = file_doc.paragraphs
     a.extend(fnd(paras, los))
     return a
