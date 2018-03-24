@@ -30,10 +30,10 @@ def fnd(paragraphs, terms):
         count_par += 1
     return count_doc, list_paras
 
-directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
-directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
-directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
-directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
+#directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
+#directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
+#directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\NO GVKEY'
+#directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\Annual_Reports_-_Corporate_(AICPA)__1972-1982011-05-07_23-05.docx'
 los = ['of', 'DOCUMENTS']
 
 def fsttotal(file_path, file_name):
@@ -68,4 +68,4 @@ def fipath(gvkey, path):
             a = fsttotal(file_path_a, os.path.splitext(file)[0])
     return a
 
-print(fipath(0, directory))
+#print(fipath(0, directory))
