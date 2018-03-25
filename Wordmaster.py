@@ -5,17 +5,31 @@ import docx
 import glob
 
 
-def getText(filename, a):
+def getText(filename, file_details):
     """Function gathers text fom docx file"""
     #Will add a variable that takes the list of paragraph numbers within the file
     #And looks for the needed text to gather data
     doc = docx.Document(filename)
     fullText = []
-    b = a[2][1]
+    para = doc.paragraphs
+    print("Have entered GETEXT")
+    #print(len(para))
+    #print(para[9].text)
+    for i in file_details[2]:
+        print(para[i].text)
+        #print(doc.paragraphs.text[i])
     for para in doc.paragraphs:
+        #print(para.text)
         fullText.append(para.text)
     return '\n'.join(fullText)
 
+
+#def par_loop(file_path, file_details):
+    #"""Function that loops through paragraph numbers
+    #and calls getText for each starting paragraph"""
+    #print("Have entered par_loop")
+    #for i in file_details[2]:
+        #getText(file_path, i,15)
 
 def fnd(paragraphs, terms):
     """Given a string of characters find paragraph numbers of each case"""
@@ -42,10 +56,8 @@ def fsttotal(file_path, file_name):
     a = [file_name]
     file_doc = docx.Document(file_path)
     paras = file_doc.paragraphs
-    print(len(paras))
-    b = fnd(paras, los)
-    print(b)
-    a.extend(b)
+    #print(len(paras))
+    a.extend(fnd(paras, los))
     return a
 
 
@@ -60,11 +72,12 @@ def file_loop(path):
             for i in os.listdir(file_path_a):
                 file_path_open = os.path.join(file_path_a, i)
                 a = fsttotal(file_path_open, os.path.splitext(i)[0])
+                #par_loop(file_path_open,a)
                 getText(file_path_open, a)
-                print(a)
+                #print(a)
         else:
             a = fsttotal(file_path_a, os.path.splitext(file)[0])
-            print(a)
+            #print(a)
     return a
 
 
