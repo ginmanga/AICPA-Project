@@ -49,6 +49,7 @@ def fsttotal(file_path, file_name):
     return a
 
 def file_loop(path):
+    """This function calls fipath when the path given is a folder and not a file"""
     for file in os.listdir(path):
         #Loops through files and folders in path
         #calls fsttotal function
