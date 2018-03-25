@@ -4,19 +4,18 @@ import os
 import docx
 import glob
 
+
 def getText(filename, a):
     """Function gathers text fom docx file"""
     #Will add a variable that takes the list of paragraph numbers within the file
     #And looks for the needed text to gather data
     doc = docx.Document(filename)
     fullText = []
-    b = a[2][0]
-    print("GETTEXT")
-    print(filename)
-    print(doc.paragraphs[b].text)
+    b = a[2][1]
     for para in doc.paragraphs:
         fullText.append(para.text)
     return '\n'.join(fullText)
+
 
 def fnd(paragraphs, terms):
     """Given a string of characters find paragraph numbers of each case"""
@@ -35,21 +34,24 @@ def fnd(paragraphs, terms):
         count_par += 1
     return count_doc, list_paras
 
+
 def fsttotal(file_path, file_name):
     """Function to find start and total documents"""
     los = ['of', 'DOCUMENTS']
+    b = []
     a = [file_name]
-    print("FSTTTTTTTOOOTTAkllll")
-    print("File name %s" % (a))
-    print("File path  %s" %(file_path))
     file_doc = docx.Document(file_path)
-    #print("MAAAADDDEE")
     paras = file_doc.paragraphs
-    a.extend(fnd(paras, los))
+    print(len(paras))
+    b = fnd(paras, los)
+    print(b)
+    a.extend(b)
     return a
 
+
 def file_loop(path):
-    """This function calls fipath when the path given is a folder and not a file"""
+    """This function is called by fipath when the path
+    given is a folder and not a file"""
     for file in os.listdir(path):
         #Loops through files and folders in path
         #calls fsttotal function
@@ -57,7 +59,6 @@ def file_loop(path):
         if os.path.isdir(file_path_a) == True:
             for i in os.listdir(file_path_a):
                 file_path_open = os.path.join(file_path_a, i)
-                print("FIPATH path %s" % (file_path_open))
                 a = fsttotal(file_path_open, os.path.splitext(i)[0])
                 getText(file_path_open, a)
                 print(a)
@@ -66,10 +67,11 @@ def file_loop(path):
             print(a)
     return a
 
+
 def fipath(gvkey, path):
     """Function delivers path to files to open"""
     path = os.path.abspath(path)
-    print(os.path.isdir(path))
+    #print(os.path.isdir(path))
     if os.path.isdir(path) == False:
         file_name = os.path.splitext(os.path.basename(path))[0]
         # get file name without path or extension
@@ -77,13 +79,3 @@ def fipath(gvkey, path):
         return a
     else:
         return file_loop(path)
-
-
-    #try:
-        #print("HERE?")
-        #file_name = os.path.splitext(os.path.basename(path))[0]
-        # get file name without path or extension
-        #a = fsttotal(path, file_name)
-        #return a
-    #except:
-        #None
