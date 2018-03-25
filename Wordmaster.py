@@ -69,7 +69,7 @@ def fipath(gvkey, path):
     """Function delivers path to files to open"""
     path = os.path.abspath(path)
     print(os.path.isdir(path))
-    if os.path.abspath(path) == False:
+    if os.path.isdir(path) == False:
         file_name = os.path.splitext(os.path.basename(path))[0]
         # get file name without path or extension
         a = fsttotal(path, file_name)
