@@ -17,7 +17,8 @@ def getText(filename, file_details):
     #print(para[9].text)
     for i in file_details[2]:
         print(para[i].text)
-        #print(doc.paragraphs.text[i])
+        for j in range(i, i+15):
+           print(para[j].text)
     for para in doc.paragraphs:
         #print(para.text)
         fullText.append(para.text)
