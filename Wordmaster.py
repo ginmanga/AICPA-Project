@@ -16,13 +16,16 @@ def getText(filename, file_details):
     #print(len(para))
     #print(para[9].text)
     for i in file_details[2]:
-        print(para[i].text)
+        newText = []
         for j in range(i, i+15):
-           print(para[j].text)
-    for para in doc.paragraphs:
+           #print(para[j].text)
+           newText.append(para[j].text)
+        fullText.append(newText)
+    #for para in doc.paragraphs:
         #print(para.text)
-        fullText.append(para.text)
-    return '\n'.join(fullText)
+        #fullText.append(para.text)
+    return fullText
+    #return '\n'.join(fullText)
 
 
 #def par_loop(file_path, file_details):
@@ -57,7 +60,6 @@ def fsttotal(file_path, file_name):
     a = [file_name]
     file_doc = docx.Document(file_path)
     paras = file_doc.paragraphs
-    #print(len(paras))
     a.extend(fnd(paras, los))
     return a
 
@@ -74,11 +76,11 @@ def file_loop(path):
                 file_path_open = os.path.join(file_path_a, i)
                 a = fsttotal(file_path_open, os.path.splitext(i)[0])
                 #par_loop(file_path_open,a)
-                getText(file_path_open, a)
-                #print(a)
+                #print(getText(file_path_open, a))
+                a.append(getText(file_path_open, a))
+                print(a)
         else:
             a = fsttotal(file_path_a, os.path.splitext(file)[0])
-            #print(a)
     return a
 
 
