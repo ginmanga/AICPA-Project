@@ -49,25 +49,6 @@ def fsttotal(file_path, file_name):
     return a
 
 def file_loop(path):
-
-def fipath(gvkey, path):
-    """Function delivers path to files to open"""
-    path = os.path.abspath(path)
-    print(os.path.isdir(path))
-    if os.path.abspath(path) == False:
-        file_name = os.path.splitext(os.path.basename(path))[0]
-        # get file name without path or extension
-        a = fsttotal(path, file_name)
-        return a
-
-    #try:
-        #print("HERE?")
-        #file_name = os.path.splitext(os.path.basename(path))[0]
-        # get file name without path or extension
-        #a = fsttotal(path, file_name)
-        #return a
-    #except:
-        #None
     for file in os.listdir(path):
         #Loops through files and folders in path
         #calls fsttotal function
@@ -83,3 +64,25 @@ def fipath(gvkey, path):
             a = fsttotal(file_path_a, os.path.splitext(file)[0])
             print(a)
     return a
+
+def fipath(gvkey, path):
+    """Function delivers path to files to open"""
+    path = os.path.abspath(path)
+    print(os.path.isdir(path))
+    if os.path.abspath(path) == False:
+        file_name = os.path.splitext(os.path.basename(path))[0]
+        # get file name without path or extension
+        a = fsttotal(path, file_name)
+        return a
+    else:
+        return file_loop(path)
+
+
+    #try:
+        #print("HERE?")
+        #file_name = os.path.splitext(os.path.basename(path))[0]
+        # get file name without path or extension
+        #a = fsttotal(path, file_name)
+        #return a
+    #except:
+        #None
