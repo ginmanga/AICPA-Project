@@ -30,22 +30,53 @@ def parseText(num_docs, text):
         print(i[1])
         #print(i[1].find(a))
         #print("NNNNNNN")
-        name = company_name(i[1])
-        #print(name)
+        #name = company_name(i[1])
+        name = if_find("COMPANY NAME:", i[1])
+        #print(i[2:4])
+        sic = sic_code(i[2:4])
+        #print(sic)
 
 
-def company_name(text):
-    """Receives raw data and returns the company name
-    with no leading or extra spaces"""
-    a = "COMPANY NAME:"
-    if text.find(a) > -1:
-         name = text[len(a):len(text)].strip()
-    else:
-        name = text.strip()
-    return name
+#def company_name(text): LOOKS LIKE DO NOT NEED A FUNCTION FOR THIS
+    #"""Receives raw data and returns the company name
+    #with no leading or extra spaces"""
+    #a = "COMPANY NAME:"
+    #if text.find(a) > -1:
+        #name = text[len(a):len(text)].strip()
+    #else:
+        #name = text.strip()
+    #return name
 
 def sic_code(text):
-    """Receives raw data and finds the SIC code in AICPA files"""
+    """Receives raw data and finds the SIC code in AICPA files
+    Need to check in which row it is, since some files have an address"""
+    a = "SIC_CODE:"
+    max_elen = len("SIC CODE: 737; 7374")+1
+    #check = len("717 RIDGEDALE AVENUE; EAST HANOVER, NJ 07936")
+    com_sep = [":", ";"]
+    #print(text[0])
+    #print(len(text[0]))
+    if len(text[0]) <= max_elen:
+        if text[0].find(a) > -1:
+            code = text[0][len(a):len(text[0])].strip()
+        else:
+            code = text[0].strip()
+    else:
+        if text[0].find(a) > -1:
+            code = text[0][len(a):len(text[0])].strip()
+        else:
+            code = text[0].strip()
+
+    print(code)
+
+def if_find(value, text):
+    """Takes a string and looks for a value
+    if found it returns the string without that value
+    else it returns the stripped string"""
+    if text.find(value) > -1:
+        return text[len(value):len(text)].strip()
+    else:
+        return text.strip()
 
 
 def write_file(data):
