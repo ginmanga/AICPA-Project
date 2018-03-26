@@ -32,9 +32,10 @@ def parseText(num_docs, text):
 
     for i in text:
         print(i)
+        print(set(i))
         name = if_find("COMPANY NAME:", i[1])
         sic = sic_code(i[2:4])
-        if_find("", i, 1)
+        date = find_strings_lists(i, months, months_2)
 
         #if len(name) >= 64: #special case do not forget
             #print(name)
@@ -63,7 +64,6 @@ def sic_code(text):
         code = if_find(a, text[1])
     try:
         int(code.translate(com_sep))
-        #print("SIC CODE IS GOOD")
     except:
         code = "NA"
         print("FIX SIC CODE")
@@ -79,9 +79,16 @@ def if_find(value, text):
         return text.strip()
 
 
-def find_strings_lists(terms, text):
-    months = ['JAN ', 'FEB ', 'MAR ', 'APR ', 'MAY ', 'JUN ', 'JUL ', 'AUG ', 'SEP ', 'OCT ', 'NOV ', 'DEC ']
-    months_2 = [s.strip() + '. ' for s in months]
+def find_strings_lists(text, terms, terms1 = ""):
+    #months = ['JAN ', 'FEB ', 'MAR ', 'APR ', 'MAY ', 'JUN ', 'JUL ', 'AUG ', 'SEP ', 'OCT ', 'NOV ', 'DEC ']
+    # = [s.strip() + '. ' for s in months]
+    for i in text:
+        print(i)
+        print(i.split())
+        print('DEC' in i.split())
+        #print(i.find(any(terms)))
+
+
 
 
 def write_file(data):
