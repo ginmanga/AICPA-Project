@@ -13,19 +13,12 @@ def getText(filename, file_details):
     fullText = []
     para = doc.paragraphs
     print("Have entered GETEXT")
-    #print(len(para))
-    #print(para[9].text)
     for i in file_details[3]:
         newText = []
         for j in range(i, i+29):
-           #print(para[j].text)
            (newText.append(para[j].text) if para[j].text != '' else None)
         fullText.append(newText)
-    #for para in doc.paragraphs:
-        #print(para.text)
-        #fullText.append(para.text)
     return fullText
-    #return '\n'.join(fullText)
 
 
 def fnd(paragraphs, terms):
@@ -71,27 +64,32 @@ def file_loop(path):
                 a.extend(fsttotal(file_path_open, os.path.splitext(i)[0]))
                 a.append(getText(file_path_open, a))
                 #print(a[4])
-                print(*a[4][0], sep='\n')
+                #print(*a[4][0], sep='\n')
+                print(len(a[4]))
+                print(a[2])
                 #print(i for i in a[4])
         else:
             a = [file_path_a]
-            a.extend(file_path_a, os.path.splitext(file)[0])
+            a.extend(fsttotal(file_path_a, os.path.splitext(file)[0]))
             a.append(getText(file_path_a, a))
-    #print(a)
+            #print(*a[4][0], sep='\n')
+            print(len(a[4]))
+            print(a[2])
     return a
 
 
 def fipath(gvkey, path):
     """Function delivers path to files to open"""
     path = os.path.abspath(path)
-    #print(os.path.isdir(path))
     if os.path.isdir(path) == False:
         file_name = os.path.splitext(os.path.basename(path))[0]
         # get file name without path or extension
         a = [path]
         a.extend(fsttotal(path, file_name))
         a.append(getText(path, a))
-        print(*a[4][0], sep='\n')
+        #print(*a[4][0], sep='\n')
+        print(len(a[4]))
+        print(a[2])
         return a
     else:
         return file_loop(path)
