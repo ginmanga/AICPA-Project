@@ -1,4 +1,6 @@
-""" Script to read AICPA Word Files"""
+""" Script to read AICPA Word Files
+Not meant to read other types of files
+Will have to create other functions for that"""
 # First gather identifying data and place it into a spreadsheet
 import os
 import docx
@@ -19,6 +21,37 @@ def getText(filename, file_details):
            (newText.append(para[j].text) if para[j].text != '' else None)
         fullText.append(newText)
     return fullText
+
+def parseText(num_docs, text):
+    """Parse the text gotten from geText"""
+    id_data = []
+    #print(num_docs)
+    for i in text:
+        print(i[1])
+        #print(i[1].find(a))
+        #print("NNNNNNN")
+        name = company_name(i[1])
+        #print(name)
+
+
+def company_name(text):
+    """Receives raw data and returns the company name
+    with no leading or extra spaces"""
+    a = "COMPANY NAME:"
+    if text.find(a) > -1:
+         name = text[len(a):len(text)].strip()
+    else:
+        name = text.strip()
+    return name
+
+def sic_code(text):
+    """Receives raw data and finds the SIC code in AICPA files"""
+
+
+def write_file(data):
+    """Writes all data to file"""
+    #If no GVKEY or document contains many files, then one CSV file per document
+    #For files containing less
 
 
 def fnd(paragraphs, terms):
@@ -65,16 +98,18 @@ def file_loop(path):
                 a.append(getText(file_path_open, a))
                 #print(a[4])
                 #print(*a[4][0], sep='\n')
-                print(len(a[4]))
-                print(a[2])
+                #print(len(a[4]))
+                #print(a[2])
+                #print(a)
                 #print(i for i in a[4])
         else:
             a = [file_path_a]
             a.extend(fsttotal(file_path_a, os.path.splitext(file)[0]))
             a.append(getText(file_path_a, a))
             #print(*a[4][0], sep='\n')
-            print(len(a[4]))
-            print(a[2])
+            #print(len(a[4]))
+            #print(a[2])
+            #print(a)
     return a
 
 
@@ -87,9 +122,11 @@ def fipath(gvkey, path):
         a = [path]
         a.extend(fsttotal(path, file_name))
         a.append(getText(path, a))
-        #print(*a[4][0], sep='\n')
-        print(len(a[4]))
-        print(a[2])
+        print(*a[4][0], sep='\n')
+        parseText(a[2], a[4])
+        #print(len(a[4]))
+        #print(a[2])
+        #print(a)
         return a
     else:
         return file_loop(path)
