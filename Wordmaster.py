@@ -27,15 +27,16 @@ def getText(filename, file_details):
 def parseText(num_docs, text):
     """Parse the text gotten from geText"""
     id_data = []
-    months = ['JAN ', 'FEB ', 'MAR ', 'APR ', 'MAY ', 'JUN ', 'JUL ', 'AUG ', 'SEP ', 'OCT ', 'NOV ', 'DEC ']
-    months_2 = [s.strip()+'. ' for s in months]
-
+    months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+    months.extend([s.strip()+'.' for s in months])
+    #months_2 = [s.strip()+'.' for s in months]
+    print(months)
     for i in text:
         print(i)
-        print(set(i))
+        #print(set(i))
         name = if_find("COMPANY NAME:", i[1])
         sic = sic_code(i[2:4])
-        date = find_strings_lists(i, months, months_2)
+        date = find_strings_lists(i, months)
 
         #if len(name) >= 64: #special case do not forget
             #print(name)
@@ -82,11 +83,21 @@ def if_find(value, text):
 def find_strings_lists(text, terms, terms1 = ""):
     #months = ['JAN ', 'FEB ', 'MAR ', 'APR ', 'MAY ', 'JUN ', 'JUL ', 'AUG ', 'SEP ', 'OCT ', 'NOV ', 'DEC ']
     # = [s.strip() + '. ' for s in months]
-    for i in text:
-        print(i)
-        print(i.split())
-        print('DEC' in i.split())
+    #for i in text:
+        #print(i)
+        #print(i.split())
+        #print('DEC' in i.split())
+        #for j in terms:
+            #print
+    #print("TRY NEXT")
+    #c = next((s.split() for s in text if 'DEC' in s), None)
+    #print(c)
+    c1 = next((s.split() for s in text for s1 in terms if s1 in s), None)
+    print(c1)
         #print(i.find(any(terms)))
+#mylist = ['abc123', 'def456', 'ghi789']
+#sub = 'abc'
+#next((s for s in mylist if sub in s), None) # returns 'abc123'
 
 
 
