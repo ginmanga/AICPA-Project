@@ -15,11 +15,11 @@ def getText(filename, file_details):
     print("Have entered GETEXT")
     #print(len(para))
     #print(para[9].text)
-    for i in file_details[2]:
+    for i in file_details[3]:
         newText = []
-        for j in range(i, i+15):
+        for j in range(i, i+29):
            #print(para[j].text)
-           newText.append(para[j].text)
+           (newText.append(para[j].text) if para[j].text != '' else None)
         fullText.append(newText)
     #for para in doc.paragraphs:
         #print(para.text)
@@ -27,13 +27,6 @@ def getText(filename, file_details):
     return fullText
     #return '\n'.join(fullText)
 
-
-#def par_loop(file_path, file_details):
-    #"""Function that loops through paragraph numbers
-    #and calls getText for each starting paragraph"""
-    #print("Have entered par_loop")
-    #for i in file_details[2]:
-        #getText(file_path, i,15)
 
 def fnd(paragraphs, terms):
     """Given a string of characters find paragraph numbers of each case"""
@@ -74,13 +67,15 @@ def file_loop(path):
         if os.path.isdir(file_path_a) == True:
             for i in os.listdir(file_path_a):
                 file_path_open = os.path.join(file_path_a, i)
-                a = fsttotal(file_path_open, os.path.splitext(i)[0])
-                #par_loop(file_path_open,a)
-                #print(getText(file_path_open, a))
+                a = [file_path_open]
+                a.extend(fsttotal(file_path_open, os.path.splitext(i)[0]))
                 a.append(getText(file_path_open, a))
-                print(a)
+                #print(a[4])
+                print(*a[4][0], sep='\n')
+                #print(i for i in a[4])
         else:
             a = fsttotal(file_path_a, os.path.splitext(file)[0])
+    #print(a)
     return a
 
 
