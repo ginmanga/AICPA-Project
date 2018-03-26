@@ -4,6 +4,7 @@ Will have to create other functions for that"""
 # First gather identifying data and place it into a spreadsheet
 import os
 import docx
+#import string
 import glob
 
 
@@ -25,17 +26,13 @@ def getText(filename, file_details):
 def parseText(num_docs, text):
     """Parse the text gotten from geText"""
     id_data = []
-    #print(num_docs)
     for i in text:
         print(i[1])
-        #print(i[1].find(a))
-        #print("NNNNNNN")
-        #name = company_name(i[1])
         name = if_find("COMPANY NAME:", i[1])
-        #print(i[2:4])
         sic = sic_code(i[2:4])
-        #print(sic)
-
+        print(sic)
+        if sic == "error":
+            break
 
 #def company_name(text): LOOKS LIKE DO NOT NEED A FUNCTION FOR THIS
     #"""Receives raw data and returns the company name
@@ -50,22 +47,29 @@ def parseText(num_docs, text):
 def sic_code(text):
     """Receives raw data and finds the SIC code in AICPA files
     Need to check in which row it is, since some files have an address"""
-    a = "SIC_CODE:"
-    max_elen = len("SIC CODE: 737; 7374")+1
-    #check = len("717 RIDGEDALE AVENUE; EAST HANOVER, NJ 07936")
-    com_sep = [":", ";"]
-    print(text[0])
-    #print(len(text[0]))
-    if len(text[0]) <= max_elen:
+    a = "SIC CODE:"
+    com_sep = str.maketrans("","",";: ") #check how to make this better
+    print("INSIDE SIC CODE")
+    print(text[0:2])
+    try:
+        int(if_find(a, text[0]).translate(com_sep))
         code = if_find(a, text[0])
-    else:
+    except:
         code = if_find(a, text[1])
+    try:
+        int(code.translate(com_sep))
+        print("SIC CODE IS GOOD")
+    except:
+        code = "error"
+        print("FIX SIC CODE")
+    return code
 
-        #if text[0].find(a) > -1:
-            #code = text[0][len(a):len(text[0])].strip()
-        #else:
-            #code = text[0].strip()
-    print(code)
+
+    #print(code_2)
+    #print(code_2.translate(com_sep))
+    #print(int(code_2.translate(com_sep)))
+    #print(type(int(code_2.translate(com_sep))))
+    #print(code)
 
 def if_find(value, text):
     """Takes a string and looks for a value
