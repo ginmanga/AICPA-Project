@@ -15,7 +15,7 @@ def getText(filename, file_details):
     doc = docx.Document(filename)
     fullText = []
     para = doc.paragraphs
-    print("Have entered GETEXT")
+    #print("Have entered GETEXT")
     for i in file_details[3]:
         newText = []
         for j in range(i, i+29):
@@ -23,16 +23,18 @@ def getText(filename, file_details):
         fullText.append(newText)
     return fullText
 
+
 def parseText(num_docs, text):
     """Parse the text gotten from geText"""
     id_data = []
     for i in text:
-        print(i[1])
+        #print(i[1])
         name = if_find("COMPANY NAME:", i[1])
         sic = sic_code(i[2:4])
-        print(sic)
-        if sic == "error":
-            break
+        if len(name) >= 64:
+            print(name)
+            for j in i:
+                print(j)
 
 #def company_name(text): LOOKS LIKE DO NOT NEED A FUNCTION FOR THIS
     #"""Receives raw data and returns the company name
@@ -49,8 +51,8 @@ def sic_code(text):
     Need to check in which row it is, since some files have an address"""
     a = "SIC CODE:"
     com_sep = str.maketrans("","",";: ") #check how to make this better
-    print("INSIDE SIC CODE")
-    print(text[0:2])
+    #print("INSIDE SIC CODE")
+    #print(text[0:2])
     try:
         int(if_find(a, text[0]).translate(com_sep))
         code = if_find(a, text[0])
@@ -58,18 +60,11 @@ def sic_code(text):
         code = if_find(a, text[1])
     try:
         int(code.translate(com_sep))
-        print("SIC CODE IS GOOD")
+        #print("SIC CODE IS GOOD")
     except:
-        code = "error"
+        code = "NA"
         print("FIX SIC CODE")
     return code
-
-
-    #print(code_2)
-    #print(code_2.translate(com_sep))
-    #print(int(code_2.translate(com_sep)))
-    #print(type(int(code_2.translate(com_sep))))
-    #print(code)
 
 def if_find(value, text):
     """Takes a string and looks for a value
@@ -130,21 +125,13 @@ def file_loop(path):
                 a.extend(fsttotal(file_path_open, os.path.splitext(i)[0]))
                 a.append(getText(file_path_open, a))
                 parseText(a[2], a[4])
-                #print(a[4])
-                #print(*a[4][0], sep='\n')
-                #print(len(a[4]))
-                #print(a[2])
-                #print(a)
-                #print(i for i in a[4])
         else:
             a = [file_path_a]
             a.extend(fsttotal(file_path_a, os.path.splitext(file)[0]))
             a.append(getText(file_path_a, a))
             parseText(a[2], a[4])
-            #print(*a[4][0], sep='\n')
-            #print(len(a[4]))
-            #print(a[2])
-            #print(a)
+            #if parseText(a[2], a[4]) == 'error':
+               #break
     return a
 
 
@@ -157,11 +144,7 @@ def fipath(gvkey, path):
         a = [path]
         a.extend(fsttotal(path, file_name))
         a.append(getText(path, a))
-        #print(*a[4][0], sep='\n')
         parseText(a[2], a[4])
-        #print(len(a[4]))
-        #print(a[2])
-        #print(a)
         return a
     else:
         return file_loop(path)
