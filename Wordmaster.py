@@ -27,14 +27,19 @@ def getText(filename, file_details):
 def parseText(num_docs, text):
     """Parse the text gotten from geText"""
     id_data = []
+    months = ['JAN ', 'FEB ', 'MAR ', 'APR ', 'MAY ', 'JUN ', 'JUL ', 'AUG ', 'SEP ', 'OCT ', 'NOV ', 'DEC ']
+    months_2 = [s.strip()+'. ' for s in months]
+
     for i in text:
-        #print(i[1])
+        print(i)
         name = if_find("COMPANY NAME:", i[1])
         sic = sic_code(i[2:4])
-        if len(name) >= 64:
-            print(name)
-            for j in i:
-                print(j)
+        if_find("", i, 1)
+
+        #if len(name) >= 64: #special case do not forget
+            #print(name)
+            #for j in i:
+                #print(j)
 
 #def company_name(text): LOOKS LIKE DO NOT NEED A FUNCTION FOR THIS
     #"""Receives raw data and returns the company name
@@ -51,8 +56,6 @@ def sic_code(text):
     Need to check in which row it is, since some files have an address"""
     a = "SIC CODE:"
     com_sep = str.maketrans("","",";: ") #check how to make this better
-    #print("INSIDE SIC CODE")
-    #print(text[0:2])
     try:
         int(if_find(a, text[0]).translate(com_sep))
         code = if_find(a, text[0])
@@ -74,6 +77,11 @@ def if_find(value, text):
         return text[len(value):len(text)].strip()
     else:
         return text.strip()
+
+
+def find_strings_lists(terms, text):
+    months = ['JAN ', 'FEB ', 'MAR ', 'APR ', 'MAY ', 'JUN ', 'JUL ', 'AUG ', 'SEP ', 'OCT ', 'NOV ', 'DEC ']
+    months_2 = [s.strip() + '. ' for s in months]
 
 
 def write_file(data):
