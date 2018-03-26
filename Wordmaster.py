@@ -74,7 +74,9 @@ def file_loop(path):
                 print(*a[4][0], sep='\n')
                 #print(i for i in a[4])
         else:
-            a = fsttotal(file_path_a, os.path.splitext(file)[0])
+            a = [file_path_a]
+            a.extend(file_path_a, os.path.splitext(file)[0])
+            a.append(getText(file_path_a, a))
     #print(a)
     return a
 
@@ -86,7 +88,10 @@ def fipath(gvkey, path):
     if os.path.isdir(path) == False:
         file_name = os.path.splitext(os.path.basename(path))[0]
         # get file name without path or extension
-        a = fsttotal(path, file_name)
+        a = [path]
+        a.extend(fsttotal(path, file_name))
+        a.append(getText(path, a))
+        print(*a[4][0], sep='\n')
         return a
     else:
         return file_loop(path)
