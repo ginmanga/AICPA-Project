@@ -54,19 +54,17 @@ def sic_code(text):
     max_elen = len("SIC CODE: 737; 7374")+1
     #check = len("717 RIDGEDALE AVENUE; EAST HANOVER, NJ 07936")
     com_sep = [":", ";"]
-    #print(text[0])
+    print(text[0])
     #print(len(text[0]))
     if len(text[0]) <= max_elen:
-        if text[0].find(a) > -1:
-            code = text[0][len(a):len(text[0])].strip()
-        else:
-            code = text[0].strip()
+        code = if_find(a, text[0])
     else:
-        if text[0].find(a) > -1:
-            code = text[0][len(a):len(text[0])].strip()
-        else:
-            code = text[0].strip()
+        code = if_find(a, text[1])
 
+        #if text[0].find(a) > -1:
+            #code = text[0][len(a):len(text[0])].strip()
+        #else:
+            #code = text[0].strip()
     print(code)
 
 def if_find(value, text):
@@ -127,6 +125,7 @@ def file_loop(path):
                 a = [file_path_open]
                 a.extend(fsttotal(file_path_open, os.path.splitext(i)[0]))
                 a.append(getText(file_path_open, a))
+                parseText(a[2], a[4])
                 #print(a[4])
                 #print(*a[4][0], sep='\n')
                 #print(len(a[4]))
@@ -137,6 +136,7 @@ def file_loop(path):
             a = [file_path_a]
             a.extend(fsttotal(file_path_a, os.path.splitext(file)[0]))
             a.append(getText(file_path_a, a))
+            parseText(a[2], a[4])
             #print(*a[4][0], sep='\n')
             #print(len(a[4]))
             #print(a[2])
@@ -153,7 +153,7 @@ def fipath(gvkey, path):
         a = [path]
         a.extend(fsttotal(path, file_name))
         a.append(getText(path, a))
-        print(*a[4][0], sep='\n')
+        #print(*a[4][0], sep='\n')
         parseText(a[2], a[4])
         #print(len(a[4]))
         #print(a[2])
