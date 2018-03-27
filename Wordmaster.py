@@ -71,10 +71,12 @@ def if_find(value, text, option = 0):
         else:
             return text.strip()
     if option == 1:
-        nt = text.count(value)
+        nt = text.lower().count(value.lower())
+        #print(nt)
         if nt >= 1:
             for i in range(1, nt+1):
-                text = text[text.find(value)+1:len(text)].strip()
+                #text = text[text.lower().find(value.lower())+1:len(text)].strip()
+                text = text[text.lower().find(value.lower())+len(value):len(text)].strip()
             return text
         else:
             return text.strip()
@@ -95,6 +97,12 @@ def find_strings_lists(text, terms, option = 0):
         #print("here")
         c1 = next((s for s in text if terms.lower() in s.lower()), None)
         print(c1)
+        try:
+            c1 = if_find(terms, c1, option=1)
+            print(c1)
+        except:
+            None
+
 
 
 
