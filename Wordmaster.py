@@ -37,7 +37,11 @@ def parseText(num_docs, text):
         name = if_find("COMPANY NAME:", i[1])
         sic = sic_code(i[2:4])
         date = find_strings_lists(i, months)
-
+        print(date)
+        #date = if_find(":", date, option = 1)
+        #print(date)
+        if date == None:
+            input("press enter:")
         #if len(name) >= 64: #special case do not forget
             #print(name)
             #for j in i:
@@ -70,30 +74,27 @@ def sic_code(text):
         print("FIX SIC CODE")
     return code
 
-def if_find(value, text):
+def if_find(value, text, option = 0):
     """Takes a string and looks for a value
-    if found it returns the string without that value
+    if found it returns the string without that value (and before)
     else it returns the stripped string"""
-    if text.find(value) > -1:
-        return text[len(value):len(text)].strip()
-    else:
-        return text.strip()
+    if option == 0:
+        if text.find(value) > -1:
+            return text[len(value):len(text)].strip()
+        else:
+            return text.strip()
+    if option == 1:
+        if text.find(value) > -1:
+            return text[text.find(value)+1:len(text)]
+        else:
+            return text.strip()
 
 
 def find_strings_lists(text, terms, terms1 = ""):
-    #months = ['JAN ', 'FEB ', 'MAR ', 'APR ', 'MAY ', 'JUN ', 'JUL ', 'AUG ', 'SEP ', 'OCT ', 'NOV ', 'DEC ']
-    # = [s.strip() + '. ' for s in months]
-    #for i in text:
-        #print(i)
-        #print(i.split())
-        #print('DEC' in i.split())
-        #for j in terms:
-            #print
-    #print("TRY NEXT")
-    #c = next((s.split() for s in text if 'DEC' in s), None)
-    #print(c)
-    c1 = next((s.split() for s in text for s1 in terms if s1 in s), None)
+    c1 = next((s for s in text for s1 in terms if s1 in s.split()), None)
     print(c1)
+    c1 = if_find(":", c1, option = 1)
+    return c1
         #print(i.find(any(terms)))
 #mylist = ['abc123', 'def456', 'ghi789']
 #sub = 'abc'
