@@ -30,41 +30,24 @@ def parseText(num_docs, text):
     months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
               'MARCH', 'SEPT']
     months.extend([s.strip()+'.' for s in months])
-    #months_2 = [s.strip()+'.' for s in months]
-    print(months)
     for i in text:
-        #print(i)
-        #print(set(i))
         name = if_find("COMPANY NAME:", i[1])
         sic = sic_code(i[2:4])
-        print(name)
         date = find_strings_lists(i, months)
-        print(date)
-        #date = if_find(":", date, option = 1)
-        #print(date)
         if date == None:
             date = "NA"
-            #input("press enter:")
+        ticker = find_strings_lists(i, "Ticker", option=1)
+        print(ticker)
         #if len(name) >= 64: #special case do not forget
             #print(name)
             #for j in i:
                 #print(j)
-
-#def company_name(text): LOOKS LIKE DO NOT NEED A FUNCTION FOR THIS
-    #"""Receives raw data and returns the company name
-    #with no leading or extra spaces"""
-    #a = "COMPANY NAME:"
-    #if text.find(a) > -1:
-        #name = text[len(a):len(text)].strip()
-    #else:
-        #name = text.strip()
-    #return name
-
 def sic_code(text):
     """Receives raw data and finds the SIC code in AICPA files
     Need to check in which row it is, since some files have an address"""
     a = "SIC CODE:"
     com_sep = str.maketrans("","",";: ") #check how to make this better
+    #erases ;: and empty spaces
     try:
         int(if_find(a, text[0]).translate(com_sep))
         code = if_find(a, text[0])
@@ -74,8 +57,9 @@ def sic_code(text):
         int(code.translate(com_sep))
     except:
         code = "NA"
-        print("FIX SIC CODE")
+        #print("FIX SIC CODE")
     return code
+
 
 def if_find(value, text, option = 0):
     """Takes a string and looks for a value
@@ -87,42 +71,30 @@ def if_find(value, text, option = 0):
         else:
             return text.strip()
     if option == 1:
-        #print(nt)
-        initial = text
         nt = text.count(value)
         if nt >= 1:
             for i in range(1, nt+1):
-                #print(i)
                 text = text[text.find(value)+1:len(text)].strip()
-            #if nt > 1:
-                #print(text)
-                #print(initial)
-                #nt = input("press enter:")
-                #continue
             return text
         else:
             return text.strip()
 
 
-def find_strings_lists(text, terms, terms1 = ""):
-    c1 = next((s for s in text for s1 in terms if s1.lower() in if_find(":",s, option = 1).lower().split()), None)
-    #print(text[5])
-    #print(if_find(":",text[5], option = 1))
-    #print(c1)
-    #if c1 == None:
-        #print(text)
-    #c1 = if_find(":", c1, option = 1)
-    #print("HHHERRE")
-    #print(c1)
-    try:
-        c1 = if_find(":", c1, option = 1)
-    except:
-        None
-    return c1
-        #print(i.find(any(terms)))
-#mylist = ['abc123', 'def456', 'ghi789']
-#sub = 'abc'
-#next((s for s in mylist if sub in s), None) # returns 'abc123'
+def find_strings_lists(text, terms, option = 0):
+    """Takes two lists of strings. It looks for each element of terms in each element of text
+    if it finds it, it gives back the item in text that matches"""
+    #option = 0 text and terms are both lists
+    if option == 0:
+        c1 = next((s for s in text for s1 in terms if s1.lower() in if_find(":",s, option = 1).lower().split()), None)
+        try:
+            c1 = if_find(":", c1, option = 1)
+        except:
+            None
+        return c1
+    if option == 1:
+        #print("here")
+        c1 = next((s for s in text if terms.lower() in s.lower()), None)
+        print(c1)
 
 
 
