@@ -28,7 +28,7 @@ def parseText(num_docs, text):
     """Parse the text gotten from geText"""
     id_data = []
     months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
-              'MARCH']
+              'MARCH', 'SEPT']
     months.extend([s.strip()+'.' for s in months])
     #months_2 = [s.strip()+'.' for s in months]
     print(months)
@@ -37,12 +37,14 @@ def parseText(num_docs, text):
         #print(set(i))
         name = if_find("COMPANY NAME:", i[1])
         sic = sic_code(i[2:4])
+        print(name)
         date = find_strings_lists(i, months)
         print(date)
         #date = if_find(":", date, option = 1)
         #print(date)
         if date == None:
-            input("press enter:")
+            date = "NA"
+            #input("press enter:")
         #if len(name) >= 64: #special case do not forget
             #print(name)
             #for j in i:
@@ -79,8 +81,6 @@ def if_find(value, text, option = 0):
     """Takes a string and looks for a value
     if found it returns the string without that value (and before)
     else it returns the stripped string"""
-
-
     if option == 0:
         if text.find(value) > -1:
             return text[len(value):len(text)].strip()
@@ -88,14 +88,17 @@ def if_find(value, text, option = 0):
             return text.strip()
     if option == 1:
         #print(nt)
+        initial = text
         nt = text.count(value)
         if nt >= 1:
             for i in range(1, nt+1):
                 #print(i)
                 text = text[text.find(value)+1:len(text)].strip()
-            if nt > 1:
-                print(text)
-                input("press enter:")
+            #if nt > 1:
+                #print(text)
+                #print(initial)
+                #nt = input("press enter:")
+                #continue
             return text
         else:
             return text.strip()
@@ -104,12 +107,17 @@ def if_find(value, text, option = 0):
 def find_strings_lists(text, terms, terms1 = ""):
     c1 = next((s for s in text for s1 in terms if s1.lower() in if_find(":",s, option = 1).lower().split()), None)
     #print(text[5])
-    print(if_find(":",text[5], option = 1))
-    print(c1)
-    c1 = if_find(":", c1, option = 1)
-    print("HHHERRE")
-    print(c1)
+    #print(if_find(":",text[5], option = 1))
+    #print(c1)
+    #if c1 == None:
+        #print(text)
     #c1 = if_find(":", c1, option = 1)
+    #print("HHHERRE")
+    #print(c1)
+    try:
+        c1 = if_find(":", c1, option = 1)
+    except:
+        None
     return c1
         #print(i.find(any(terms)))
 #mylist = ['abc123', 'def456', 'ghi789']
