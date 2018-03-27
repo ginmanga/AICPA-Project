@@ -27,12 +27,13 @@ def getText(filename, file_details):
 def parseText(num_docs, text):
     """Parse the text gotten from geText"""
     id_data = []
-    months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+    months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
+              'MARCH']
     months.extend([s.strip()+'.' for s in months])
     #months_2 = [s.strip()+'.' for s in months]
     print(months)
     for i in text:
-        print(i)
+        #print(i)
         #print(set(i))
         name = if_find("COMPANY NAME:", i[1])
         sic = sic_code(i[2:4])
@@ -78,22 +79,37 @@ def if_find(value, text, option = 0):
     """Takes a string and looks for a value
     if found it returns the string without that value (and before)
     else it returns the stripped string"""
+
+
     if option == 0:
         if text.find(value) > -1:
             return text[len(value):len(text)].strip()
         else:
             return text.strip()
     if option == 1:
-        if text.find(value) > -1:
-            return text[text.find(value)+1:len(text)]
+        #print(nt)
+        nt = text.count(value)
+        if nt >= 1:
+            for i in range(1, nt+1):
+                #print(i)
+                text = text[text.find(value)+1:len(text)].strip()
+            if nt > 1:
+                print(text)
+                input("press enter:")
+            return text
         else:
             return text.strip()
 
 
 def find_strings_lists(text, terms, terms1 = ""):
-    c1 = next((s for s in text for s1 in terms if s1 in s.split()), None)
+    c1 = next((s for s in text for s1 in terms if s1.lower() in if_find(":",s, option = 1).lower().split()), None)
+    #print(text[5])
+    print(if_find(":",text[5], option = 1))
     print(c1)
     c1 = if_find(":", c1, option = 1)
+    print("HHHERRE")
+    print(c1)
+    #c1 = if_find(":", c1, option = 1)
     return c1
         #print(i.find(any(terms)))
 #mylist = ['abc123', 'def456', 'ghi789']
