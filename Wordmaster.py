@@ -15,7 +15,6 @@ def getText(filename, file_details):
     doc = docx.Document(filename)
     fullText = []
     para = doc.paragraphs
-    #print("Have entered GETEXT")
     for i in file_details[3]:
         newText = []
         for j in range(i, i+29):
@@ -36,10 +35,8 @@ def parseText(num_docs, text):
         name = if_find("COMPANY NAME:", i[1])
         sic = sic_code(i[2:4])
         date = find_strings_lists(i, months)
-        #if date == None:
-            #date = "NA"
         ticker = find_strings_lists(i, "Ticker", option=1)
-        id_data.append([count, name, sic, date, ticker])
+        id_data.append([str(count), name, sic, date, ticker])
         count += 1
     return id_data
         #print(ticker)
@@ -66,7 +63,6 @@ def sic_code(text):
         int(code.translate(com_sep))
     except:
         code = "NA"
-        #print("FIX SIC CODE")
     return code
 
 
@@ -109,15 +105,19 @@ def find_strings_lists(text, terms, option = 0):
         return c1
 
 
-
-
-
-def write_file(data, options = 0):
+def write_file(path_file, data, options = 0):
     """Writes all data to file"""
     #If no GVKEY or document contains many files, then one CSV file per document
     #For files containing less
     #if we know the gvkey, write a single file with all the files data
     #if no gvkey, write one per file
+    print(path_file)
+    print(data)
+    path_to = os.path.join(path_file, 'summary.txt')
+    #data_ss = open(os.path.join(path_file, 'sum.text'),'w')
+    #with open(path_to,'w') as file:
+        #file.writelines('\t'.join(i) + '\n' for i in data)
+    #file.close()
 
 def fnd(paragraphs, terms):
     """Given a string of characters find paragraph numbers of each case"""
@@ -135,7 +135,7 @@ def fnd(paragraphs, terms):
             list_paras.append(count_par)
             count_doc += 1
         count_par += 1
-    return count_doc, list_paras
+    return str(count_doc), list_paras
 
 
 def fsttotal(file_path, file_name):
@@ -172,8 +172,7 @@ def file_loop(path):
                     file_data.append(a[0:3]+i)
             for i in file_data: #append data of different folders, use it for the ones we know GVKEY
                 names.append(i)
-            print(names)
-
+            #print(names)
         else:
             a = [file_path_a]
             a.extend(fsttotal(file_path_a, os.path.splitext(file)[0]))
@@ -183,6 +182,9 @@ def file_loop(path):
                 file_data.append(a[0:3]+i)
         for i in file_data:
             names.append(i)
+        #print(names[1][0])
+        #print(names)
+    write_file(path, names)
     return names
 
 
