@@ -99,18 +99,13 @@ def find_strings_lists(text, terms, option = 0):
             c1 = if_find(":", c1, option = 1)
         except:
             c1 = 'NA'
-            #None
         return c1
     if option == 1:
-        #print("here")
         c1 = next((s for s in text if terms.lower() in s.lower()), None)
-        #print(c1)
         try:
             c1 = if_find(terms, c1, option=1)
-            #print(c1)
         except:
             c1 = 'NA'
-            #None
         return c1
 
 
@@ -158,17 +153,34 @@ def fsttotal(file_path, file_name):
 def file_loop(path):
     """This function is called by fipath when the path
     given is a folder and not a file"""
+    names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'Company Name', 'SIC', 'DATE', 'TICKER']]
+    file_data = []
     for file in os.listdir(path):
         #Loops through files and folders in path
         #calls fsttotal function
         file_path_a = os.path.join(path, file)
-        if os.path.isdir(file_path_a) == True:
+        if os.path.isdir(file_path_a) is True:
+            count = 0
             for i in os.listdir(file_path_a):
                 file_path_open = os.path.join(file_path_a, i)
                 a = [file_path_open]
                 a.extend(fsttotal(file_path_open, os.path.splitext(i)[0]))
                 a.append(getText(file_path_open, a))
-                parseText(a[2], a[4])
+                b = parseText(a[2], a[4])  # collects data from the text in each document
+                #bb = [a[0:3] + z for z in b]
+                #print(bb)
+                #print(file_data)
+                count += 1
+                #print(count)
+                for i in b: #append data when a folder has more than one file
+                    file_data.append(a[0:3]+i)
+            for i in file_data: #append data of different folders, use it for the ones we know GVKEY
+                names.append(i)
+            print(names)
+            #print("F")
+                #for i in b:
+                    #print(i)
+                    #names.append(i)
         else:
             a = [file_path_a]
             a.extend(fsttotal(file_path_a, os.path.splitext(file)[0]))
@@ -189,19 +201,10 @@ def fipath(gvkey, path):
         a.extend(fsttotal(path, file_name)) #gets starting paragraphs for each document
         a.append(getText(path, a)) #gets initial text of each document
         names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'Company Name', 'SIC', 'DATE', 'TICKER']]
-        b = a[0:3]
-        b1 = parseText(a[2], a[4]) #collects data from the text in each document
-        #file_data.append(b)
-        #print(parseText(a[2], a[4]))
-        #print(file_data)
-        #print(b1)
-        file_data = [b+z for z in b1]
-        print(file_data)
+        b = parseText(a[2], a[4]) #collects data from the text in each document
+        file_data = [a[0:3] + z for z in b]
         for i in file_data:
-            #print(i)
             names.append(i)
-        #print(names.append([file_data]))
-        #names.append(i for i in file_data)
         print(names)
         return a
     else:
