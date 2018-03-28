@@ -26,27 +26,36 @@ def getText(filename, file_details):
 
 def parseText(num_docs, text):
     """Parse the text gotten from geText"""
-    id_data = []
+    #id_data = ['File Path', 'File Name','Docs in file', 'Company Name', 'SIC', 'DATE', 'TICKER']
     months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
               'MARCH', 'SEPT']
     months.extend([s.strip()+'.' for s in months])
+    id_data = []
+    count = 1
     for i in text:
         name = if_find("COMPANY NAME:", i[1])
         sic = sic_code(i[2:4])
         date = find_strings_lists(i, months)
-        if date == None:
-            date = "NA"
+        #if date == None:
+            #date = "NA"
         ticker = find_strings_lists(i, "Ticker", option=1)
-        print(ticker)
+        id_data.append([count, name, sic, date, ticker])
+        count += 1
+    return id_data
+        #print(ticker)
+        #compile data for each file
+
         #if len(name) >= 64: #special case do not forget
             #print(name)
             #for j in i:
                 #print(j)
+
 def sic_code(text):
     """Receives raw data and finds the SIC code in AICPA files
     Need to check in which row it is, since some files have an address"""
     a = "SIC CODE:"
-    com_sep = str.maketrans("","",";: ") #check how to make this better
+    com_sep = str.maketrans("","",";: ")
+    #check how to make this better
     #erases ;: and empty spaces
     try:
         int(if_find(a, text[0]).translate(com_sep))
@@ -72,10 +81,8 @@ def if_find(value, text, option = 0):
             return text.strip()
     if option == 1:
         nt = text.lower().count(value.lower())
-        #print(nt)
         if nt >= 1:
             for i in range(1, nt+1):
-                #text = text[text.lower().find(value.lower())+1:len(text)].strip()
                 text = text[text.lower().find(value.lower())+len(value):len(text)].strip()
             return text
         else:
@@ -91,31 +98,36 @@ def find_strings_lists(text, terms, option = 0):
         try:
             c1 = if_find(":", c1, option = 1)
         except:
-            None
+            c1 = 'NA'
+            #None
         return c1
     if option == 1:
         #print("here")
         c1 = next((s for s in text if terms.lower() in s.lower()), None)
-        print(c1)
+        #print(c1)
         try:
             c1 = if_find(terms, c1, option=1)
-            print(c1)
+            #print(c1)
         except:
-            None
+            c1 = 'NA'
+            #None
+        return c1
 
 
 
 
 
-def write_file(data):
+def write_file(data, options = 0):
     """Writes all data to file"""
     #If no GVKEY or document contains many files, then one CSV file per document
     #For files containing less
-
+    #if we know the gvkey, write a single file with all the files data
+    #if no gvkey, write one per file
 
 def fnd(paragraphs, terms):
     """Given a string of characters find paragraph numbers of each case"""
     #For AICPA files, look for number of number DOCUMENT
+    #called by fsttotal
     count_par = 0
     count_doc = 0
     list_paras = []
@@ -133,6 +145,7 @@ def fnd(paragraphs, terms):
 
 def fsttotal(file_path, file_name):
     """Function to find start and total documents"""
+    #Call fnd() function
     los = ['of', 'DOCUMENTS']
     b = []
     a = [file_name]
@@ -173,9 +186,23 @@ def fipath(gvkey, path):
         file_name = os.path.splitext(os.path.basename(path))[0]
         # get file name without path or extension
         a = [path]
-        a.extend(fsttotal(path, file_name))
-        a.append(getText(path, a))
-        parseText(a[2], a[4])
+        a.extend(fsttotal(path, file_name)) #gets starting paragraphs for each document
+        a.append(getText(path, a)) #gets initial text of each document
+        names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'Company Name', 'SIC', 'DATE', 'TICKER']]
+        b = a[0:3]
+        b1 = parseText(a[2], a[4]) #collects data from the text in each document
+        #file_data.append(b)
+        #print(parseText(a[2], a[4]))
+        #print(file_data)
+        #print(b1)
+        file_data = [b+z for z in b1]
+        print(file_data)
+        for i in file_data:
+            #print(i)
+            names.append(i)
+        #print(names.append([file_data]))
+        #names.append(i for i in file_data)
+        print(names)
         return a
     else:
         return file_loop(path)
