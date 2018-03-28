@@ -167,28 +167,23 @@ def file_loop(path):
                 a.extend(fsttotal(file_path_open, os.path.splitext(i)[0]))
                 a.append(getText(file_path_open, a))
                 b = parseText(a[2], a[4])  # collects data from the text in each document
-                #bb = [a[0:3] + z for z in b]
-                #print(bb)
-                #print(file_data)
                 count += 1
-                #print(count)
                 for i in b: #append data when a folder has more than one file
                     file_data.append(a[0:3]+i)
             for i in file_data: #append data of different folders, use it for the ones we know GVKEY
                 names.append(i)
             print(names)
-            #print("F")
-                #for i in b:
-                    #print(i)
-                    #names.append(i)
+
         else:
             a = [file_path_a]
             a.extend(fsttotal(file_path_a, os.path.splitext(file)[0]))
             a.append(getText(file_path_a, a))
-            parseText(a[2], a[4])
-            #if parseText(a[2], a[4]) == 'error':
-               #break
-    return a
+            b = parseText(a[2], a[4])
+            for i in b:
+                file_data.append(a[0:3]+i)
+        for i in file_data:
+            names.append(i)
+    return names
 
 
 def fipath(gvkey, path):
@@ -206,6 +201,6 @@ def fipath(gvkey, path):
         for i in file_data:
             names.append(i)
         print(names)
-        return a
+        return names
     else:
         return file_loop(path)
