@@ -23,7 +23,7 @@ def getText(filename, file_details):
     return fullText
 
 
-def parseText(num_docs, text):
+def parseText(num_docs, text, list_par):
     """Parse the text gotten from geText"""
     #id_data = ['File Path', 'File Name','Docs in file', 'Company Name', 'SIC', 'DATE', 'TICKER']
     months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
@@ -31,12 +31,14 @@ def parseText(num_docs, text):
     months.extend([s.strip()+'.' for s in months])
     id_data = []
     count = 1
+    #print(list_par)
     for i in text:
         name = if_find("COMPANY NAME:", i[1])
         sic = sic_code(i[2:4])
         date = find_strings_lists(i, months)
         ticker = find_strings_lists(i, "Ticker", option=1)
-        id_data.append([str(count), name, sic, date, ticker])
+        start_paragraph = list_par[count-1]
+        id_data.append([str(count), str(start_paragraph), name, sic, date, ticker,])
         count += 1
     return id_data
         #print(ticker)
@@ -111,13 +113,13 @@ def write_file(path_file, data, options = 0):
     #For files containing less
     #if we know the gvkey, write a single file with all the files data
     #if no gvkey, write one per file
-    print(path_file)
-    print(data)
+    #print(path_file)
+    #print(data)
     path_to = os.path.join(path_file, 'summary.txt')
     #data_ss = open(os.path.join(path_file, 'sum.text'),'w')
-    #with open(path_to,'w') as file:
-        #file.writelines('\t'.join(i) + '\n' for i in data)
-    #file.close()
+    with open(path_to,'w') as file:
+        file.writelines('\t'.join(i) + '\n' for i in data)
+    file.close()
 
 def fnd(paragraphs, terms):
     """Given a string of characters find paragraph numbers of each case"""
@@ -131,7 +133,7 @@ def fnd(paragraphs, terms):
         sc = terms[1] in i.text
         dc = any(char.isdigit() for char in i.text)
         c_list = [fc, sc, dc]
-        if all(cond == True for cond in c_list):
+        if all(cond is True for cond in c_list):
             list_paras.append(count_par)
             count_doc += 1
         count_par += 1
@@ -150,45 +152,45 @@ def fsttotal(file_path, file_name):
     return a
 
 
-def file_loop(path):
+def file_loop(path, ptofile):
     """This function is called by fipath when the path
     given is a folder and not a file"""
-    names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'Company Name', 'SIC', 'DATE', 'TICKER']]
-    file_data = []
+    names = [
+        ['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph', 'Company Name', 'SIC', 'DATE', 'TICKER']]
+    dir_data = []
     for file in os.listdir(path):
         #Loops through files and folders in path
         #calls fsttotal function
         file_path_a = os.path.join(path, file)
         if os.path.isdir(file_path_a) is True:
             count = 0
+            file_data = [] #resets the data for the new folder
             for i in os.listdir(file_path_a):
                 file_path_open = os.path.join(file_path_a, i)
                 a = [file_path_open]
                 a.extend(fsttotal(file_path_open, os.path.splitext(i)[0]))
                 a.append(getText(file_path_open, a))
-                b = parseText(a[2], a[4])  # collects data from the text in each document
+                b = parseText(a[2], a[4], a[3])  # collects data from the text in each document
                 count += 1
-                for i in b: #append data when a folder has more than one file
+                for i in b: #append data for files in folder
                     file_data.append(a[0:3]+i)
-            for i in file_data: #append data of different folders, use it for the ones we know GVKEY
-                names.append(i)
-            #print(names)
         else:
+            file_data = []
             a = [file_path_a]
             a.extend(fsttotal(file_path_a, os.path.splitext(file)[0]))
             a.append(getText(file_path_a, a))
-            b = parseText(a[2], a[4])
+            b = parseText(a[2], a[4], a[3])
             for i in b:
                 file_data.append(a[0:3]+i)
         for i in file_data:
             names.append(i)
-        #print(names[1][0])
-        #print(names)
-    write_file(path, names)
+    print(ptofile)
+    if ptofile == 1:
+        write_file(path, names)
     return names
 
 
-def fipath(gvkey, path):
+def fipath(gvkey, path, ptofile = 0):
     """Function delivers path to files to open"""
     path = os.path.abspath(path)
     if os.path.isdir(path) == False:
@@ -197,12 +199,15 @@ def fipath(gvkey, path):
         a = [path]
         a.extend(fsttotal(path, file_name)) #gets starting paragraphs for each document
         a.append(getText(path, a)) #gets initial text of each document
-        names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'Company Name', 'SIC', 'DATE', 'TICKER']]
-        b = parseText(a[2], a[4]) #collects data from the text in each document
+        print(a)
+        names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph', 'Company Name', 'SIC', 'DATE', 'TICKER']]
+        b = parseText(a[2], a[4], a[3]) #collects data from the text in each document
         file_data = [a[0:3] + z for z in b]
         for i in file_data:
             names.append(i)
         print(names)
+        for i in names:
+            print(i)
         return names
     else:
-        return file_loop(path)
+        return file_loop(path, ptofile)
