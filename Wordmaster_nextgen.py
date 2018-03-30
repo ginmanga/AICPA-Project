@@ -1,7 +1,6 @@
-""" Script to read AICPA Word Files
-Not meant to read other types of files
-Will have to create other functions for that"""
-# First gather identifying data and place it into a spreadsheet
+""" Modify Wordmaster to parse more general word files
+Also needs to read pdfs and determine if they are text or images
+"""
 import os
 import docx
 #import string
@@ -17,13 +16,15 @@ def getText(filename, file_details):
     para = doc.paragraphs
     for i in file_details[3]:
         newText = []
-        for j in range(i, i+29):
+        aicpa_count = 29
+        for j in range(i, i+aicpa_count):
            (newText.append(para[j].text) if para[j].text != '' else None)
+           if para[j].text)
         fullText.append(newText)
     return fullText
 
 
-def parseText(num_docs, text, list_par):
+def parseText(num_docs, text, list_par, type_file = ""):
     """Parse the text gotten from geText"""
     #id_data = ['File Path', 'File Name','Docs in file', 'Company Name', 'SIC', 'DATE', 'TICKER']
     months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
@@ -41,13 +42,6 @@ def parseText(num_docs, text, list_par):
         id_data.append([str(count), str(start_paragraph), name, sic, date, ticker,])
         count += 1
     return id_data
-        #print(ticker)
-        #compile data for each file
-
-        #if len(name) >= 64: #special case do not forget
-            #print(name)
-            #for j in i:
-                #print(j)
 
 def sic_code(text):
     """Receives raw data and finds the SIC code in AICPA files
@@ -151,11 +145,15 @@ def fsttotal(file_path, file_name): ### NEED TO MODIFY TO INCLUDE AICPA and SEC 
     a.extend(fnd(paras, los))
     return a
 
+def check_file(path):
+    """Open file and determine the file type"""
+
 def term_gen(type_file): #generate the search terms based on the file
     #First, determine the file type
     if type_file == 'AICPA':
         names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph', 'Company Name',
                   'SIC', 'DATE', 'TICKER']]
+        doc_idfer = los = ['of', 'DOCUMENTS']
 
 
 
@@ -193,7 +191,7 @@ def file_loop(path, ptofile):
                 file_data.append(a[0:3]+i)
         for i in file_data:
             names.append(i)
-    print(ptofile)
+    #print(ptofile)
     if ptofile == 1:
         write_file(path, names)
     return names
@@ -215,9 +213,9 @@ def fipath(gvkey, path, ptofile = 0):
         file_data = [a[0:3] + z for z in b]
         for i in file_data:
             names.append(i)
-        print(names)
-        for i in names:
-            print(i)
+        #print(names)
+        #for i in names:
+            #print(i)
         return names
     else:
         return file_loop(path, ptofile)
