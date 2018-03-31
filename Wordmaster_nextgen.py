@@ -33,10 +33,11 @@ def getText(para, par_top, option = ""):
 def parseText(num_docs, text, list_par, doc_type = 'aicpa'):
     """Parse the text gotten from geText"""
     #id_data = ['File Path', 'File Name','Docs in file', 'Company Name', 'SIC', 'DATE', 'TICKER']
-
     id_data = []
     count = 1
     if doc_type is 'aicpa':
+        #names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph', 'Company Name',
+                  #'SIC', 'DATE', 'TICKER']]
         months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
                   'MARCH', 'SEPT']
         months.extend([s.strip() + '.' for s in months])
@@ -49,8 +50,11 @@ def parseText(num_docs, text, list_par, doc_type = 'aicpa'):
             id_data.append([str(count), str(start_paragraph), name, sic, date, ticker])
             count += 1
     if doc_type is 'seconline':
+        #names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph',
+                  #'Document Type', 'Company Name', 'Filing Date','Document Date',
+                  #'TICKER', 'Exchange','Incorporation', 'CUSIP', 'SIC']]
         print("not done yet")
-    return id_data
+    return id_data #names
 
 def sic_code(text):
     """Receives raw data and finds the SIC code in AICPA files
@@ -116,11 +120,16 @@ def write_file(path_file, data, options = 0):
     #For files containing less
     #if we know the gvkey, write a single file with all the files data
     #if no gvkey, write one per file
-    path_to = os.path.join(path_file, 'summary.txt')
+    path_to_aicpa = os.path.join(path_file, 'summary_aicpa.txt')
+    path_to_seconline = os.path.join(path_file, 'summary_seconline.txt')
     #data_ss = open(os.path.join(path_file, 'sum.text'),'w')
-    with open(path_to,'w') as file:
-        file.writelines('\t'.join(i) + '\n' for i in data)
+    with open(path_to_aicpa,'w') as file:
+        file.writelines('\t'.join(i) + '\n' for i in data[0])
     file.close()
+    with open(path_to_seconline,'w') as file:
+        file.writelines('\t'.join(i) + '\n' for i in data[1])
+    file.close()
+
 
 def fnd(paragraphs, terms, file_name):
     """Given a string of characters find paragraph numbers of each case"""
@@ -156,14 +165,11 @@ def check_file(paragraphs, count_par):
     sec_online = ['copyright', 'sec', 'online']
     text = getText(paragraphs, count_par, "check")
     doc_type = 'aicpa'
-    #for i in text[0]:
-        #print(i)
-    #print(all(j in i for j in sec_online))
-    #print(all(j in i for j in sec_online))
-    #print(next((s for s in text[0] for s1 in sec_online if s1.lower() in s.lower()), None))
     if next((s for s in text[0] for s1 in sec_online if s1.lower() in s.lower()), None) is not None:
         doc_type = "seconline"
+    print(doc_type)
     return doc_type
+
 
 def fsttotal(file_path, file_name): ### NEED TO MODIFY TO INCLUDE AICPA and SEC ONLINE FILES
     """Function to find start and total documents"""
@@ -191,9 +197,11 @@ def term_gen(type_file): #generate the search terms based on the file
 def file_loop(path, ptofile):
     """This function is called by fipath when the path
     given is a folder and not a file"""
-    names = [
-        ['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph', 'Company Name',
-         'SIC', 'DATE', 'TICKER']]
+    names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count',
+              'start_paragraph', 'Company Name','SIC', 'DATE', 'TICKER']]
+    names2 = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph',
+               'Document Type', 'Company Name', 'Filing Date','Document Date',
+               'TICKER', 'Exchange','Incorporation', 'CUSIP', 'SIC']]
     dir_data = []
     for file in os.listdir(path):
         #Loops through files and folders in path
@@ -215,23 +223,37 @@ def file_loop(path, ptofile):
         else:
             file_data = []
             a = [file_path_a]
-            a.extend(fsttotal(file_path_a, os.path.splitext(file)[0]))
-            a.append(getText(file_path_a, a))
-            b = parseText(a[2], a[4], a[3])
+            file_name, count_doc, list_paras, paras, doc_type = fsttotal(file_path_a, os.path.splitext(file)[0])
+            a.extend([file_name, count_doc, list_paras])
+            a.append(getText(paras, list_paras, doc_type))
+            #a.extend(fsttotal(file_path_a, os.path.splitext(file)[0]))
+            #a.append(getText(file_path_a, a))
+            print(a)
+            b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras, doc_type)  # collects data from the text in each document
+            #b = parseText(a[2], a[4], a[3])
             for i in b:
                 file_data.append(a[0:3]+i)
         for i in file_data:
-            names.append(i)
-    #print(ptofile)
+            if doc_type == 'aicpa':
+                names.append(i)
+            if doc_type == 'seconline':
+                names2.append(i)
+    print(names)
+    print(names2)
     if ptofile == 1:
-        write_file(path, names)
+        write_file(path, [names, names2])
     return names
 
 
 def fipath(gvkey, path, ptofile = 0):
     """Function delivers path to files to open"""
     path = os.path.abspath(path)
-    if os.path.isdir(path) == False:
+    names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count',
+              'start_paragraph', 'Company Name','SIC', 'DATE', 'TICKER']]
+    names2 = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph',
+               'Document Type', 'Company Name', 'Filing Date','Document Date',
+               'TICKER', 'Exchange','Incorporation', 'CUSIP', 'SIC']]
+    if os.path.isdir(path) is False:
         file_name = os.path.splitext(os.path.basename(path))[0]
         # get file name without path or extension
         a = [path]
@@ -241,15 +263,15 @@ def fipath(gvkey, path, ptofile = 0):
         a.extend([file_name, count_doc, list_paras])
         a.append(getText(paras, list_paras, doc_type))
         print(a)
-        names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph', 'Company Name',
-                  'SIC', 'DATE', 'TICKER']]
-        b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras, doc_type) #collects data from the text in each document
+        b, names = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras, doc_type) #collects data from the text in each document
         #print(a[0:3])
         file_data = [a[0:3] + z for z in b]
         for i in file_data:
-            names.append(i)
-        print(names)
-
+            if doc_type == 'aicpa':
+                names.append(i)
+            if doc_type == 'seconline':
+                names2.append(i)
+        #print(names)
         return names
     else:
         return file_loop(path, ptofile)
