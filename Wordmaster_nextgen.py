@@ -7,19 +7,27 @@ import docx
 import glob
 
 
-def getText(filename, file_details):
+def getText(paras, file_details, options = ""):
     """Function gathers text fom docx file"""
     #Will add a variable that takes the list of paragraph numbers within the file
     #And looks for the needed text to gather data
-    doc = docx.Document(filename)
+    #doc = docx.Document(filename)
     fullText = []
-    para = doc.paragraphs
+    para = paras
+    aicpa_count = 29
+    if options is "check":
+        aicpa_count = 10
+    if options is 'seconline':
+        aicpa_count = 50
+    #sec_online = ['copyright', 'SEC', 'online',]
+    print("FILLLEE")
+    print(file_details[3])
     for i in file_details[3]:
         newText = []
-        aicpa_count = 29
+        #aicpa_count = 29
         for j in range(i, i+aicpa_count):
            (newText.append(para[j].text) if para[j].text != '' else None)
-           if para[j].text)
+           #if para[j].text)
         fullText.append(newText)
     return fullText
 
@@ -115,13 +123,15 @@ def write_file(path_file, data, options = 0):
         file.writelines('\t'.join(i) + '\n' for i in data)
     file.close()
 
-def fnd(paragraphs, terms):
+def fnd(paragraphs, terms, file_name):
     """Given a string of characters find paragraph numbers of each case"""
     #For AICPA files, look for number of number DOCUMENT
     #called by fsttotal
     count_par = 0
     count_doc = 0
     list_paras = []
+    aicpa = 0
+    sec_online = ['copyright', 'sec', 'online']
     for i in paragraphs:
         fc = terms[0] in i.text
         sc = terms[1] in i.text
@@ -130,6 +140,14 @@ def fnd(paragraphs, terms):
         if all(cond is True for cond in c_list):
             list_paras.append(count_par)
             count_doc += 1
+            if count_doc is 1:
+                #check if the file is AICPA or SECONLINE
+                print("NEEE")
+                text = []
+                print([s.text for s in paragraphs[count_par:count_par+10]])
+                getText(paragraphs, count_par, "check")
+                #print([s.text if s.text is not '' for s in paragraphs[count_par:count_par+10]])
+            #if all(j.lower() for j in sec_online in i.text)
         count_par += 1
     return str(count_doc), list_paras
 
@@ -139,11 +157,14 @@ def fsttotal(file_path, file_name): ### NEED TO MODIFY TO INCLUDE AICPA and SEC 
     #Call fnd() function
     los = ['of', 'DOCUMENTS']
     b = []
-    a = [file_name]
+    #a = file_name
     file_doc = docx.Document(file_path)
     paras = file_doc.paragraphs
-    a.extend(fnd(paras, los))
-    return a
+    count_doc, list_paras = fnd(paras, los, file_name)
+    #a.extend(fnd(paras, los, file_name))
+    print("FSSSRT")
+    print(a)
+    return file_name, count_doc, list_paras, paras
 
 def check_file(path):
     """Open file and determine the file type"""
@@ -175,8 +196,9 @@ def file_loop(path, ptofile):
             for i in os.listdir(file_path_a):
                 file_path_open = os.path.join(file_path_a, i)
                 a = [file_path_open]
-                a.extend(fsttotal(file_path_open, os.path.splitext(i)[0]))
-                a.append(getText(file_path_open, a))
+                a1, a2 = fsttotal(file_path_open, os.path.splitext(i)[0])
+                a.extend(a1)
+                a.append(getText(a2, a))
                 b = parseText(a[2], a[4], a[3])  # collects data from the text in each document
                 count += 1
                 for i in b: #append data for files in folder
@@ -204,8 +226,14 @@ def fipath(gvkey, path, ptofile = 0):
         file_name = os.path.splitext(os.path.basename(path))[0]
         # get file name without path or extension
         a = [path]
-        a.extend(fsttotal(path, file_name)) #gets starting paragraphs for each document
-        a.append(getText(path, a)) #gets initial text of each document
+        #a1, a2 = fsttotal(path, file_name)
+        file_name, count_doc, list_paras, paras = fsttotal(path, file_name)
+
+        a.extend([file_name, count_doc, list_paras])
+        a.append(getText(paras, list_paras])
+        #a.append(getText(a2, a[3]))
+        #a.extend(fsttotal(path, file_name)) #gets starting paragraphs for each document
+        #a.append(getText(path, a)) #gets initial text of each document
         print(a)
         names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph', 'Company Name',
                   'SIC', 'DATE', 'TICKER']]
