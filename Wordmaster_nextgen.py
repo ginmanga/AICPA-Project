@@ -7,27 +7,25 @@ import docx
 import glob
 
 
-def getText(paras, file_details, options = ""):
+def getText(para, par_top, option = ""):
     """Function gathers text fom docx file"""
     #Will add a variable that takes the list of paragraph numbers within the file
     #And looks for the needed text to gather data
     #doc = docx.Document(filename)
+    #Three inputs paras = paragraphs
+    #par_top is the list of paragraphs numbers to check
+    #options tells how many paragraphs after par_top to gather
     fullText = []
-    para = paras
     aicpa_count = 29
-    if options is "check":
+    if option is "check":
         aicpa_count = 10
-    if options is 'seconline':
-        aicpa_count = 50
-    #sec_online = ['copyright', 'SEC', 'online',]
-    print("FILLLEE")
-    print(file_details[3])
-    for i in file_details[3]:
+    if option is 'seconline':
+        aicpa_count = 40
+    for i in par_top:
         newText = []
         #aicpa_count = 29
         for j in range(i, i+aicpa_count):
            (newText.append(para[j].text) if para[j].text != '' else None)
-           #if para[j].text)
         fullText.append(newText)
     return fullText
 
@@ -115,8 +113,6 @@ def write_file(path_file, data, options = 0):
     #For files containing less
     #if we know the gvkey, write a single file with all the files data
     #if no gvkey, write one per file
-    #print(path_file)
-    #print(data)
     path_to = os.path.join(path_file, 'summary.txt')
     #data_ss = open(os.path.join(path_file, 'sum.text'),'w')
     with open(path_to,'w') as file:
@@ -131,7 +127,6 @@ def fnd(paragraphs, terms, file_name):
     count_doc = 0
     list_paras = []
     aicpa = 0
-    sec_online = ['copyright', 'sec', 'online']
     for i in paragraphs:
         fc = terms[0] in i.text
         sc = terms[1] in i.text
@@ -143,14 +138,29 @@ def fnd(paragraphs, terms, file_name):
             if count_doc is 1:
                 #check if the file is AICPA or SECONLINE
                 print("NEEE")
-                text = []
-                print([s.text for s in paragraphs[count_par:count_par+10]])
-                getText(paragraphs, count_par, "check")
+                #text = getText(paragraphs, [count_par], "check")
+                doc_type = check_file(paragraphs, [count_par])
+                print(doc_type)
                 #print([s.text if s.text is not '' for s in paragraphs[count_par:count_par+10]])
             #if all(j.lower() for j in sec_online in i.text)
         count_par += 1
-    return str(count_doc), list_paras
+    return str(count_doc), list_paras, doc_type
 
+
+def check_file(paragraphs, count_par):
+    """Check file type"""
+    #call getText and parse first paras after initial document to check type of file
+    sec_online = ['copyright', 'sec', 'online']
+    text = getText(paragraphs, count_par, "check")
+    doc_type = 'aicpa'
+    #for i in text[0]:
+        #print(i)
+    #print(all(j in i for j in sec_online))
+    #print(all(j in i for j in sec_online))
+    #print(next((s for s in text[0] for s1 in sec_online if s1.lower() in s.lower()), None))
+    if next((s for s in text[0] for s1 in sec_online if s1.lower() in s.lower()), None) is not None:
+        doc_type = "seconline"
+    return doc_type
 
 def fsttotal(file_path, file_name): ### NEED TO MODIFY TO INCLUDE AICPA and SEC ONLINE FILES
     """Function to find start and total documents"""
@@ -160,14 +170,10 @@ def fsttotal(file_path, file_name): ### NEED TO MODIFY TO INCLUDE AICPA and SEC 
     #a = file_name
     file_doc = docx.Document(file_path)
     paras = file_doc.paragraphs
-    count_doc, list_paras = fnd(paras, los, file_name)
-    #a.extend(fnd(paras, los, file_name))
-    print("FSSSRT")
-    print(a)
-    return file_name, count_doc, list_paras, paras
+    count_doc, list_paras, doc_type = fnd(paras, los, file_name)
+    return file_name, count_doc, list_paras, paras, doc_type
 
-def check_file(path):
-    """Open file and determine the file type"""
+
 
 def term_gen(type_file): #generate the search terms based on the file
     #First, determine the file type
@@ -227,12 +233,14 @@ def fipath(gvkey, path, ptofile = 0):
         # get file name without path or extension
         a = [path]
         #a1, a2 = fsttotal(path, file_name)
-        file_name, count_doc, list_paras, paras = fsttotal(path, file_name)
-
+        # gets starting paragraphs for each document
+        file_name, count_doc, list_paras, paras, doc_type = fsttotal(path, file_name)
+        print("FIPATH")
+        print(list_paras)
         a.extend([file_name, count_doc, list_paras])
-        a.append(getText(paras, list_paras])
+        a.append(getText(paras, list_paras, doc_type))
         #a.append(getText(a2, a[3]))
-        #a.extend(fsttotal(path, file_name)) #gets starting paragraphs for each document
+        #a.extend(fsttotal(path, file_name))
         #a.append(getText(path, a)) #gets initial text of each document
         print(a)
         names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph', 'Company Name',
