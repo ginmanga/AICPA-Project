@@ -30,23 +30,26 @@ def getText(para, par_top, option = ""):
     return fullText
 
 
-def parseText(num_docs, text, list_par, type_file = ""):
+def parseText(num_docs, text, list_par, doc_type = 'aicpa'):
     """Parse the text gotten from geText"""
     #id_data = ['File Path', 'File Name','Docs in file', 'Company Name', 'SIC', 'DATE', 'TICKER']
-    months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
-              'MARCH', 'SEPT']
-    months.extend([s.strip()+'.' for s in months])
+
     id_data = []
     count = 1
-    #print(list_par)
-    for i in text:
-        name = if_find("COMPANY NAME:", i[1])
-        sic = sic_code(i[2:4])
-        date = find_strings_lists(i, months)
-        ticker = find_strings_lists(i, "Ticker", option=1)
-        start_paragraph = list_par[count-1]
-        id_data.append([str(count), str(start_paragraph), name, sic, date, ticker,])
-        count += 1
+    if doc_type is 'aicpa':
+        months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
+                  'MARCH', 'SEPT']
+        months.extend([s.strip() + '.' for s in months])
+        for i in text:
+            name = if_find("COMPANY NAME:", i[1])
+            sic = sic_code(i[2:4])
+            date = find_strings_lists(i, months)
+            ticker = find_strings_lists(i, "Ticker", option=1)
+            start_paragraph = list_par[count-1]
+            id_data.append([str(count), str(start_paragraph), name, sic, date, ticker])
+            count += 1
+    if doc_type is 'seconline':
+        print("not done yet")
     return id_data
 
 def sic_code(text):
@@ -235,23 +238,18 @@ def fipath(gvkey, path, ptofile = 0):
         #a1, a2 = fsttotal(path, file_name)
         # gets starting paragraphs for each document
         file_name, count_doc, list_paras, paras, doc_type = fsttotal(path, file_name)
-        print("FIPATH")
-        print(list_paras)
         a.extend([file_name, count_doc, list_paras])
         a.append(getText(paras, list_paras, doc_type))
-        #a.append(getText(a2, a[3]))
-        #a.extend(fsttotal(path, file_name))
-        #a.append(getText(path, a)) #gets initial text of each document
         print(a)
         names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph', 'Company Name',
                   'SIC', 'DATE', 'TICKER']]
-        b = parseText(a[2], a[4], a[3]) #collects data from the text in each document
+        b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras, doc_type) #collects data from the text in each document
+        #print(a[0:3])
         file_data = [a[0:3] + z for z in b]
         for i in file_data:
             names.append(i)
-        #print(names)
-        #for i in names:
-            #print(i)
+        print(names)
+
         return names
     else:
         return file_loop(path, ptofile)
