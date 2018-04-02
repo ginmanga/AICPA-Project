@@ -59,11 +59,15 @@ def parseText(num_docs, text, list_par, doc_type = 'aicpa'):
             name = i[4]
             fil_date = i[3].split()[1]
             doc_date = i[3].split()[3]
-            print(doc_type)
-            print(name)
-            print(fil_date)
-            print(doc_date)
-        print("not done yet")
+            ticker = i[6].split()[1]
+            exchange = i[6].split()[3]
+            incorp = next((if_find('INCORPORATION:', j, 1) for j in i if j.find('INCORPORATION:') >= 0), "")
+            cusip = next((if_find('CUSIP NUMBER:', j, 1) for j in i if j.find('CUSIP NUMBER:') >= 0), "")
+            sic = next((if_find('SIC-CODES:', j, 1) for j in i if j.find('SIC-CODES:') >= 0), "")
+
+            id_data.append([doc_type, name, fil_date, doc_date, ticker, exchange, incorp, cusip, sic])
+            #print(id_data)
+        #print("not done yet")
     return id_data #names
 
 def sic_code(text):
@@ -158,7 +162,7 @@ def fnd(paragraphs, terms, file_name):
             count_doc += 1
             if count_doc is 1:
                 #check if the file is AICPA or SECONLINE
-                print("NEEE")
+                #print("NEEE")
                 #text = getText(paragraphs, [count_par], "check")
                 doc_type = check_file(paragraphs, [count_par])
                 print(doc_type)
@@ -176,7 +180,7 @@ def check_file(paragraphs, count_par):
     doc_type = 'aicpa'
     if next((s for s in text[0] for s1 in sec_online if s1.lower() in s.lower()), None) is not None:
         doc_type = "seconline"
-    print(doc_type)
+    #print(doc_type)
     return doc_type
 
 
