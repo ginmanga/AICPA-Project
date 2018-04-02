@@ -4,7 +4,7 @@ Also needs to read pdfs and determine if they are text or images
 import os
 import docx
 #import string
-import glob
+#import glob
 
 
 def getText(para, par_top, option = ""):
@@ -23,9 +23,8 @@ def getText(para, par_top, option = ""):
         aicpa_count = 40
     for i in par_top:
         newText = []
-        #aicpa_count = 29
         for j in range(i, i+aicpa_count):
-           (newText.append(para[j].text) if para[j].text != '' else None)
+           (newText.append(para[j].text.strip()) if para[j].text.strip() != '' else None)
         fullText.append(newText)
     return fullText
 
@@ -53,6 +52,17 @@ def parseText(num_docs, text, list_par, doc_type = 'aicpa'):
         #names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph',
                   #'Document Type', 'Company Name', 'Filing Date','Document Date',
                   #'TICKER', 'Exchange','Incorporation', 'CUSIP', 'SIC']]
+        print('text')
+        print(text)
+        for i in text:
+            doc_type = i[2]
+            name = i[4]
+            fil_date = i[3].split()[1]
+            doc_date = i[3].split()[3]
+            print(doc_type)
+            print(name)
+            print(fil_date)
+            print(doc_date)
         print("not done yet")
     return id_data #names
 
@@ -60,8 +70,7 @@ def sic_code(text):
     """Receives raw data and finds the SIC code in AICPA files
     Need to check in which row it is, since some files have an address"""
     a = "SIC CODE:"
-    com_sep = str.maketrans("","",";: ")
-    #check how to make this better
+    com_sep = str.maketrans("","",";: ") #check how to make this better
     #erases ;: and empty spaces
     try:
         int(if_find(a, text[0]).translate(com_sep))
@@ -261,10 +270,12 @@ def fipath(gvkey, path, ptofile = 0):
         # gets starting paragraphs for each document
         file_name, count_doc, list_paras, paras, doc_type = fsttotal(path, file_name)
         a.extend([file_name, count_doc, list_paras])
-        a.append(getText(paras, list_paras, doc_type))
         print(a)
-        b, names = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras, doc_type) #collects data from the text in each document
+        #a.append(getText(paras, list_paras, doc_type))
+        print(getText(paras, list_paras, doc_type))
+        b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras, doc_type) #collects data from the text in each document
         #print(a[0:3])
+        print(b)
         file_data = [a[0:3] + z for z in b]
         for i in file_data:
             if doc_type == 'aicpa':
