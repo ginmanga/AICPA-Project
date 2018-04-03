@@ -52,8 +52,8 @@ def parseText(num_docs, text, list_par, doc_type = 'aicpa'):
         #names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph',
                   #'Document Type', 'Company Name', 'Filing Date','Document Date',
                   #'TICKER', 'Exchange','Incorporation', 'CUSIP', 'SIC']]
-        print('text')
-        print(text)
+        #print('text')
+        #print(text)
         for i in text:
             doc_type = i[2]
             name = i[4]
@@ -138,12 +138,15 @@ def write_file(path_file, data, options = 0):
     #if no gvkey, write one per file
     path_to_aicpa = os.path.join(path_file, 'summary_aicpa.txt')
     path_to_seconline = os.path.join(path_file, 'summary_seconline.txt')
+    path_to_pdf = os.path.join(path_file, 'summary_PDF.txt')
     #data_ss = open(os.path.join(path_file, 'sum.text'),'w')
     with open(path_to_aicpa,'w') as file:
         file.writelines('\t'.join(i) + '\n' for i in data[0])
     file.close()
     with open(path_to_seconline,'w') as file:
         file.writelines('\t'.join(i) + '\n' for i in data[1])
+    with open(path_to_pdf, 'w') as file:
+        file.writelines('\t'.join(i) + '\n' for i in data[2])
     file.close()
 
 
@@ -227,6 +230,7 @@ def file_loop(path, ptofile):
     names2 = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph',
                'Document Type', 'Company Name', 'Filing Date','Document Date',
                'TICKER', 'Exchange','Incorporation', 'CUSIP', 'SIC', 'Primary SIC']]
+    names3 = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count']]
     dir_data = []
     for file in os.listdir(path):
         #Loops through files and folders in path
@@ -242,40 +246,53 @@ def file_loop(path, ptofile):
                 #a.append(getText(paras, list_paras, doc_type))
                 # a.extend(fsttotal(file_path_a, os.path.splitext(file)[0]))
                 # a.append(getText(file_path_a, a))
-                print(a)
-                b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras,
-                              doc_type)  # collects data from the text in each document
+                #print(a)
+                #b = a
+                if doc_type is not "PDF":
+                    b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras,
+                                  doc_type)  # collects data from the text in each document
+                    for i in b: #append data for files in folder
+                        file_data.append(a[0:3]+i)
+                else:
+                    file_data.append(a)
                 count += 1
-                for i in b: #append data for files in folder
-                    file_data.append(a[0:3]+i)
             for i in file_data:
                 if doc_type == 'aicpa':
                     names.append(i)
                 if doc_type == 'seconline':
                     names2.append(i)
+                if doc_type == 'PDF':
+                    names3.append(i)
         else:
             file_data = []
             a = [file_path_a]
             file_name, count_doc, list_paras, paras, doc_type = fsttotal(file_path_a, os.path.splitext(file)[0])
             a.extend([file_name, count_doc, list_paras])
-            print(a)
             #a.append(getText(paras, list_paras, doc_type))
             #a.extend(fsttotal(file_path_a, os.path.splitext(file)[0]))
             #a.append(getText(file_path_a, a))
-            print(a)
-            b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras, doc_type)  # collects data from the text in each document
-            #b = parseText(a[2], a[4], a[3])
-            for i in b:
-                file_data.append(a[0:3]+i)
-        for i in file_data:
-            if doc_type == 'aicpa':
-                names.append(i)
-            if doc_type == 'seconline':
-                names2.append(i)
+            #print(a)
+            #b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras, doc_type)  # collects data from the text in each document
+            if doc_type is not "PDF":
+                b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras,
+                              doc_type)  # collects data from the text in each document
+            #count += 1
+                for i in b:  # append data for files in folder
+                    file_data.append(a[0:3] + i)
+            else:
+                file_data.append(a)
+            for i in file_data:
+                if doc_type == 'aicpa':
+                    names.append(i)
+                if doc_type == 'seconline':
+                    names2.append(i)
+                if doc_type == 'PDF':
+                    names3.append(i)
     print(names)
     print(names2)
+    print(names3)
     if ptofile == 1:
-        write_file(path, [names, names2])
+        write_file(path, [names, names2, names3])
     return names
 
 
@@ -295,12 +312,12 @@ def fipath(gvkey, path, ptofile = 0):
         # gets starting paragraphs for each document
         file_name, count_doc, list_paras, paras, doc_type = fsttotal(path, file_name)
         a.extend([file_name, count_doc, list_paras])
-        print(a)
+        #print(a)
         #a.append(getText(paras, list_paras, doc_type))
         print(getText(paras, list_paras, doc_type))
         b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras, doc_type) #collects data from the text in each document
         #print(a[0:3])
-        print(b)
+        #print(b)
         file_data = [a[0:3] + z for z in b]
         for i in file_data:
             if doc_type == 'aicpa':
