@@ -34,6 +34,7 @@ def parseText(num_docs, text, list_par, doc_type = 'aicpa'):
     #id_data = ['File Path', 'File Name','Docs in file', 'Company Name', 'SIC', 'DATE', 'TICKER']
     id_data = []
     count = 1
+    #print(doc_type)
     if doc_type is 'aicpa':
         #names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph', 'Company Name',
                   #'SIC', 'DATE', 'TICKER']]
@@ -52,16 +53,11 @@ def parseText(num_docs, text, list_par, doc_type = 'aicpa'):
         #names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph',
                   #'Document Type', 'Company Name', 'Filing Date','Document Date',
                   #'TICKER', 'Exchange','Incorporation', 'CUSIP', 'SIC']]
-        #print('text')
-        #print(text)
         for i in text:
             doc_type = i[2]
             name = i[4]
             fil_date = i[3].split()[1]
             doc_date = i[3].split()[3]
-            #ticker = i[6].split()[1]
-            #exchange = i[6].split()[3]
-            #print(next((if_find('TICKER-SYMBOL:', j, 1) for j in i if j.lower().find('ticker-symbol:') >= 0), ""))
             ticker = next((if_find('ticker-symbol:', j, 1) for j in i if j.lower().find('ticker-symbol:') >= 0), "").split()[0]
             exchange = next((if_find('ticker-symbol:', j, 1) for j in i if j.lower().find('ticker-symbol:') >= 0), "").split()[2]
             incorp = next((if_find('INCORPORATION:', j, 1) for j in i if j.lower().find('incorporation:') >= 0), "")
@@ -139,6 +135,7 @@ def write_file(path_file, data, options = 0):
     path_to_aicpa = os.path.join(path_file, 'summary_aicpa.txt')
     path_to_seconline = os.path.join(path_file, 'summary_seconline.txt')
     path_to_pdf = os.path.join(path_file, 'summary_PDF.txt')
+    path_to_fail = os.path.join(path_file, 'summary_FDL.txt')
     #data_ss = open(os.path.join(path_file, 'sum.text'),'w')
     with open(path_to_aicpa,'w') as file:
         file.writelines('\t'.join(i) + '\n' for i in data[0])
@@ -147,6 +144,8 @@ def write_file(path_file, data, options = 0):
         file.writelines('\t'.join(i) + '\n' for i in data[1])
     with open(path_to_pdf, 'w') as file:
         file.writelines('\t'.join(i) + '\n' for i in data[2])
+    with open(path_to_fail, 'w') as file:
+        file.writelines('\t'.join(i) + '\n' for i in data[3])
     file.close()
 
 
@@ -173,6 +172,10 @@ def fnd(paragraphs, terms, file_name):
                 doc_type = check_file(paragraphs, [count_par])
                 print(doc_type)
         count_par += 1
+    if count_doc is 0:
+        print("something wrong with file")
+        count_doc, list_paras, doc_type = '0', [''], 'FDL'
+
     return str(count_doc), list_paras, doc_type
 
 
@@ -182,9 +185,31 @@ def check_file(paragraphs, count_par):
     sec_online = ['copyright', 'sec', 'online']
     text = getText(paragraphs, count_par, "check")
     doc_type = 'aicpa'
-    if next((s for s in text[0] for s1 in sec_online if s1.lower() in s.lower()), None) is not None:
+    #doc_type2 = 'aicpa'
+    #doc_type3 = 'aicpa'
+    #if next((s for s in text[0] for s1 in sec_online if s1.lower() in s.lower()), None) is not None:
+        #doc_type = "seconline"
+    if (sec_online in [s for s in sec_online for s1 in text[0] if s in s1.lower()]) is True:
         doc_type = "seconline"
-    #print(doc_type)
+    #if next((s for s in text[0] if all(i for i in sec_online in s.lower()) is True, None) is not None:
+        #doc_type3 = "seconline"
+    if all(x in text[0][1].lower() for x in sec_online) is True:
+        doc_type = "seconline"
+
+    print(text[0][1])
+    #print([s for s in sec_online if s in text[0][1].lower()])
+    #print(set(sec_online) in [s for s in sec_online if s in text[0][1].lower()])
+    #print(all(x in sec_online for x in [s for s in sec_online for s1 in text[0] if s in s1.lower()]))
+    #print(text[0][1].lower())
+    #print(all(x in sec_online for x in [text[0][1].lower()]))
+    print(all(x in text[0][1].lower() for x in sec_online))
+    #print(all(i for i in sec_online if i in text[0][2].lower()))
+    print("JEEEEERE")
+    #print(next((s for s in text[0] for s1 in sec_online if s1.lower() in s.lower()), None))
+    #print(text[0][2])
+    #cc = '[*Summary]             COPYRIGHT 1989 SEC ONLINE, INC.'
+
+    print(doc_type)
     return doc_type
 
 
@@ -202,7 +227,7 @@ def fsttotal(file_path, file_name): ### NEED TO MODIFY TO INCLUDE AICPA and SEC 
         paras = file_doc.paragraphs
         count_doc, list_paras, doc_type = fnd(paras, los, file_name)
     except docx.opc.exceptions.PackageNotFoundError:
-        print(file_path)
+        #print(file_path)
         print("PDF?")
         doc_type = 'PDF'
         return file_name, count_doc, list_paras, paras, doc_type
@@ -229,6 +254,7 @@ def file_loop(path, ptofile):
                'Document Type', 'Company Name', 'Filing Date','Document Date',
                'TICKER', 'Exchange','Incorporation', 'CUSIP', 'SIC', 'Primary SIC']]
     names3 = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count']]
+    names4 = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count']]
     dir_data = []
     for file in os.listdir(path):
         #Loops through files and folders in path
@@ -240,24 +266,24 @@ def file_loop(path, ptofile):
             for i in os.listdir(file_path_a):
                 file_path_open = os.path.join(file_path_a, i)
                 a = [file_path_open]
-                print('MAIIN CALL FSRRRR')
+                #print('MAIIN CALL FSRRRR')
                 print(a)
                 file_name, count_doc, list_paras, paras, doc_type = fsttotal(a[0], os.path.splitext(file)[0])
                 a.extend([file_name, count_doc, list_paras])
                 #a.append(getText(paras, list_paras, doc_type))
                 # a.extend(fsttotal(file_path_a, os.path.splitext(file)[0]))
                 # a.append(getText(file_path_a, a))
-                print(a)
+                #print(a)
                 #b = a
-                if doc_type is not "PDF":
+                if doc_type not in ['PDF', 'FDL']:
                     b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras,
                                   doc_type)  # collects data from the text in each document
                     for i in b: #append data for files in folder
                         file_data.append(a[0:3]+i)
                 else:
                     file_data.append(a)
-                print('MAIIN')
-                print(file_data)
+                #print('MAIIN')
+                #print(file_data)
                 count += 1
             for i in file_data:
                 if doc_type == 'aicpa':
@@ -266,6 +292,8 @@ def file_loop(path, ptofile):
                     names2.append(i)
                 if doc_type == 'PDF':
                     names3.append(i)
+                if doc_type == 'FDL':
+                    names4.append(i)
         else:
             file_data = []
             a = [file_path_a]
@@ -290,12 +318,13 @@ def file_loop(path, ptofile):
                 if doc_type == 'seconline':
                     names2.append(i)
                 if doc_type == 'PDF':
-                    names3.append(i)
-    print(names)
-    print(names2)
-    print(names3)
+                    names4.append(i)
+    #print(names)
+    #print(names2)
+    #print(names3)
+    #print(names4)
     if ptofile == 1:
-        write_file(path, [names, names2, names3])
+        write_file(path, [names, names2, names3, names4])
     return names
 
 
