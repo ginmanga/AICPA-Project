@@ -172,8 +172,6 @@ def fnd(paragraphs, terms, file_name):
                 #text = getText(paragraphs, [count_par], "check")
                 doc_type = check_file(paragraphs, [count_par])
                 print(doc_type)
-                #print([s.text if s.text is not '' for s in paragraphs[count_par:count_par+10]])
-            #if all(j.lower() for j in sec_online in i.text)
         count_par += 1
     return str(count_doc), list_paras, doc_type
 
@@ -242,11 +240,14 @@ def file_loop(path, ptofile):
             for i in os.listdir(file_path_a):
                 file_path_open = os.path.join(file_path_a, i)
                 a = [file_path_open]
+                print('MAIIN CALL FSRRRR')
+                print(a)
+                file_name, count_doc, list_paras, paras, doc_type = fsttotal(a[0], os.path.splitext(file)[0])
                 a.extend([file_name, count_doc, list_paras])
                 #a.append(getText(paras, list_paras, doc_type))
                 # a.extend(fsttotal(file_path_a, os.path.splitext(file)[0]))
                 # a.append(getText(file_path_a, a))
-                #print(a)
+                print(a)
                 #b = a
                 if doc_type is not "PDF":
                     b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras,
@@ -255,6 +256,8 @@ def file_loop(path, ptofile):
                         file_data.append(a[0:3]+i)
                 else:
                     file_data.append(a)
+                print('MAIIN')
+                print(file_data)
                 count += 1
             for i in file_data:
                 if doc_type == 'aicpa':
