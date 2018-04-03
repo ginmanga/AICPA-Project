@@ -59,14 +59,17 @@ def parseText(num_docs, text, list_par, doc_type = 'aicpa'):
             name = i[4]
             fil_date = i[3].split()[1]
             doc_date = i[3].split()[3]
-            ticker = i[6].split()[1]
-            exchange = i[6].split()[3]
-            incorp = next((if_find('INCORPORATION:', j, 1) for j in i if j.find('INCORPORATION:') >= 0), "")
-            cusip = next((if_find('CUSIP NUMBER:', j, 1) for j in i if j.find('CUSIP NUMBER:') >= 0), "")
-            sic = next((if_find('SIC-CODES:', j, 1) for j in i if j.find('SIC-CODES:') >= 0), "")
-
-            id_data.append([doc_type, name, fil_date, doc_date, ticker, exchange, incorp, cusip, sic])
-            #print(id_data)
+            #ticker = i[6].split()[1]
+            #exchange = i[6].split()[3]
+            #print(next((if_find('TICKER-SYMBOL:', j, 1) for j in i if j.lower().find('ticker-symbol:') >= 0), ""))
+            ticker = next((if_find('ticker-symbol:', j, 1) for j in i if j.lower().find('ticker-symbol:') >= 0), "").split()[0]
+            exchange = next((if_find('ticker-symbol:', j, 1) for j in i if j.lower().find('ticker-symbol:') >= 0), "").split()[2]
+            incorp = next((if_find('INCORPORATION:', j, 1) for j in i if j.lower().find('incorporation:') >= 0), "")
+            cusip = next((if_find('CUSIP NUMBER:', j, 1) for j in i if j.lower().find('cusip number:') >= 0), "")
+            sic = next((if_find('SIC-CODES:', j, 1) for j in i if j.lower().find('sic-codes:') >= 0), "")
+            p_sic = next((if_find('PRIMARY SIC:', j, 1) for j in i if j.lower().find('primary sic:') >= 0), "")
+            id_data.append([doc_type, name, fil_date, doc_date, ticker, exchange, incorp, cusip, sic, p_sic])
+            print(id_data)
         #print("not done yet")
     return id_data #names
 
@@ -214,7 +217,7 @@ def file_loop(path, ptofile):
               'start_paragraph', 'Company Name','SIC', 'DATE', 'TICKER']]
     names2 = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph',
                'Document Type', 'Company Name', 'Filing Date','Document Date',
-               'TICKER', 'Exchange','Incorporation', 'CUSIP', 'SIC']]
+               'TICKER', 'Exchange','Incorporation', 'CUSIP', 'SIC', 'Primary SIC']]
     dir_data = []
     for file in os.listdir(path):
         #Loops through files and folders in path
