@@ -192,10 +192,19 @@ def fsttotal(file_path, file_name): ### NEED TO MODIFY TO INCLUDE AICPA and SEC 
     #Call fnd() function
     los = ['of', 'DOCUMENTS']
     b = []
-    #a = file_name
-    file_doc = docx.Document(file_path)
-    paras = file_doc.paragraphs
-    count_doc, list_paras, doc_type = fnd(paras, los, file_name)
+    count_doc = ""
+    list_paras = ""
+    doc_type = ""
+    paras = ""
+    try:
+        file_doc = docx.Document(file_path)
+        paras = file_doc.paragraphs
+        count_doc, list_paras, doc_type = fnd(paras, los, file_name)
+    except docx.opc.exceptions.PackageNotFoundError:
+        print(file_path)
+        print("PDF?")
+        doc_type = 'PDF'
+        return file_name, count_doc, list_paras, paras, doc_type
     return file_name, count_doc, list_paras, paras, doc_type
 
 
@@ -229,19 +238,28 @@ def file_loop(path, ptofile):
             for i in os.listdir(file_path_a):
                 file_path_open = os.path.join(file_path_a, i)
                 a = [file_path_open]
-                a1, a2 = fsttotal(file_path_open, os.path.splitext(i)[0])
-                a.extend(a1)
-                a.append(getText(a2, a))
-                b = parseText(a[2], a[4], a[3])  # collects data from the text in each document
+                a.extend([file_name, count_doc, list_paras])
+                #a.append(getText(paras, list_paras, doc_type))
+                # a.extend(fsttotal(file_path_a, os.path.splitext(file)[0]))
+                # a.append(getText(file_path_a, a))
+                print(a)
+                b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras,
+                              doc_type)  # collects data from the text in each document
                 count += 1
                 for i in b: #append data for files in folder
                     file_data.append(a[0:3]+i)
+            for i in file_data:
+                if doc_type == 'aicpa':
+                    names.append(i)
+                if doc_type == 'seconline':
+                    names2.append(i)
         else:
             file_data = []
             a = [file_path_a]
             file_name, count_doc, list_paras, paras, doc_type = fsttotal(file_path_a, os.path.splitext(file)[0])
             a.extend([file_name, count_doc, list_paras])
-            a.append(getText(paras, list_paras, doc_type))
+            print(a)
+            #a.append(getText(paras, list_paras, doc_type))
             #a.extend(fsttotal(file_path_a, os.path.splitext(file)[0]))
             #a.append(getText(file_path_a, a))
             print(a)
