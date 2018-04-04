@@ -148,7 +148,7 @@ def write_file(path_file, data, options = 0):
     file.close()
 
 
-def fnd(paragraphs, terms, file_name):
+def fnd(paragraphs, terms, terms2, file_name):
     """Given a string of characters find paragraph numbers of each case"""
     #For AICPA files, look for number of number DOCUMENT
     #called by fsttotal
@@ -160,9 +160,12 @@ def fnd(paragraphs, terms, file_name):
         fc = terms[0] in i.text
         sc = terms[1] in i.text
         dc = any(char.isdigit() for char in i.text)
+        sc2 = terms2[0] in i.text
+        #dc2 = any(char.isdigit() for char in i.text)
         c_list = [fc, sc, dc]
-        if all(cond is True for cond in c_list):
-            try:
+        c_list2 = [fc, sc2, dc]
+        if all(cond is True for cond in c_list) or all(cond is True for cond in c_list2):
+            try: #correct for some special cases
                 int(i.text.split()[0])
                 list_paras.append(count_par)
                 count_doc += 1
@@ -176,7 +179,7 @@ def fnd(paragraphs, terms, file_name):
         count_par += 1
     if count_doc is 0:
         print("something wrong with file")
-        count_doc, list_paras, doc_type = '0', [''], 'FDL'
+        count_doc, list_paras, doc_type = '0', '', 'FDL'
 
     return str(count_doc), list_paras, doc_type
 
@@ -195,7 +198,8 @@ def check_file(paragraphs, count_par):
 def fsttotal(file_path, file_name): ### NEED TO MODIFY TO INCLUDE AICPA and SEC ONLINE FILES
     """Function to find start and total documents"""
     #Call fnd() function
-    los = ['of', 'DOCUMENTS']
+    los = ['of', 'DOCUMENTS'] #works for most files
+    los2 = ['DOCUMENT'] #for special cases
     b = []
     count_doc = ""
     list_paras = ""
@@ -204,10 +208,9 @@ def fsttotal(file_path, file_name): ### NEED TO MODIFY TO INCLUDE AICPA and SEC 
     try:
         file_doc = docx.Document(file_path)
         paras = file_doc.paragraphs
-        count_doc, list_paras, doc_type = fnd(paras, los, file_name)
+        count_doc, list_paras, doc_type = fnd(paras, los, los2, file_name)
     except docx.opc.exceptions.PackageNotFoundError:
-        #print(file_path)
-        print("PDF?")
+        #print("PDF?")
         doc_type = 'PDF'
         return file_name, count_doc, list_paras, paras, doc_type
     return file_name, count_doc, list_paras, paras, doc_type
@@ -235,14 +238,19 @@ def file_loop(path, ptofile):
     names3 = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count']]
     names4 = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count']]
     dir_data = []
-    for file in os.listdir(path):
+    #for file in os.listdir(path):
+    for file in [f for f in os.listdir(path) if not f.startswith('~$')]:
         #Loops through files and folders in path
         #calls fsttotal function
         file_path_a = os.path.join(path, file)
         if os.path.isdir(file_path_a) is True:
             count = 0
             file_data = [] #resets the data for the new folder
-            for i in os.listdir(file_path_a):
+            print([f for f in os.listdir(file_path_a) if not f.startswith('~$')])
+            for i in [f for f in os.listdir(file_path_a) if not f.startswith('~$')]:
+                file_data = []
+                print("HEERE")
+                print(i)
                 file_path_open = os.path.join(file_path_a, i)
                 a = [file_path_open]
                 print(a)
@@ -256,20 +264,24 @@ def file_loop(path, ptofile):
                 else:
                     file_data.append(a)
                 count += 1
-            for i in file_data:
-                if doc_type == 'aicpa':
-                    names.append(i)
-                if doc_type == 'seconline':
-                    names2.append(i)
-                if doc_type == 'PDF':
-                    names3.append(i)
-                if doc_type == 'FDL':
-                    names4.append(i)
+                for i in file_data:
+                    if doc_type == 'aicpa':
+                        names.append(i)
+                    if doc_type == 'seconline':
+                        print("WEEEEE")
+                        names2.append(i)
+                    if doc_type == 'PDF':
+                        names3.append(i)
+                    if doc_type == 'FDL':
+                        print("INFILEFDL")
+                        names4.append(i)
         else:
             file_data = []
             a = [file_path_a]
             file_name, count_doc, list_paras, paras, doc_type = fsttotal(file_path_a, os.path.splitext(file)[0])
             a.extend([file_name, count_doc, list_paras])
+            #print(a)
+            #print(doc_type)
             if doc_type not in ['PDF', 'FDL']:
                 b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras,
                               doc_type)  # collects data from the text in each document
@@ -287,6 +299,11 @@ def file_loop(path, ptofile):
                     names3.append(i)
                 if doc_type == 'FDL':
                     names4.append(i)
+    print(names)
+    print(names2)
+    print(names3)
+    print(names4)
+
     if ptofile == 1:
         write_file(path, [names, names2, names3, names4])
     return names
@@ -301,20 +318,41 @@ def fipath(gvkey, path, ptofile = 0):
     names2 = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph',
                'Document Type', 'Company Name', 'Filing Date','Document Date',
                'TICKER', 'Exchange','Incorporation', 'CUSIP', 'SIC']]
+    names3 = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count']]
+    names4 = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count']]
     if os.path.isdir(path) is False:
         file_name = os.path.splitext(os.path.basename(path))[0]
         # get file name without path or extension
         a = [path]
         file_name, count_doc, list_paras, paras, doc_type = fsttotal(path, file_name)
         a.extend([file_name, count_doc, list_paras])
-        b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras, doc_type) #collects data from the text in each document
-        file_data = [a[0:3] + z for z in b]
+        file_data = []
+        #b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras, doc_type) #collects data from the text in each document
+        #file_data = [a[0:3] + z for z in b]
+        print(doc_type)
+        if doc_type not in ['PDF', 'FDL']:
+            b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras,
+                          doc_type)  # collects data from the text in each document
+            # count += 1
+            for i in b:  # append data for files in folder
+                file_data.append(a[0:3] + i)
+        else:
+            file_data.append(a)
         for i in file_data:
             if doc_type == 'aicpa':
                 names.append(i)
             if doc_type == 'seconline':
                 names2.append(i)
-
+            if doc_type == 'PDF':
+                names3.append(i)
+            if doc_type == 'FDL':
+                names4.append(i)
+        print(names)
+        print(names2)
+        print(names3)
+        print(names4)
+        if ptofile == 1:
+            write_file(path, [names, names2, names3, names4])
         return names
     else:
         return file_loop(path, ptofile)
