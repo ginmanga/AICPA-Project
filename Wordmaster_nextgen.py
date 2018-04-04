@@ -167,16 +167,6 @@ def fnd(paragraphs, terms, terms2, file_name):
         c_list = [fc, sc, dc]
         c_list2 = [fc, sc2, dc]
         if all(cond is True for cond in c_list) or all(cond is True for cond in c_list2):
-            #try: #correct for some special cases
-                #int(i.text.split()[0])
-                #list_paras.append(count_par)
-                #count_doc += 1
-            #except:
-                #continue
-            #print(i.text.split())
-            #print(i.text.split()[0].isdigit())
-            #print(i.text.split()[0].lower() == 'focus')
-            #print(i.text.split()[0].lower())
             if i.text.split()[0].isdigit() or i.text.split()[0].lower() == 'focus':
                 list_paras.append(count_par)
                 count_doc += 1
