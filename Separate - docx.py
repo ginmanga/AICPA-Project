@@ -16,11 +16,13 @@ directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\GVKEY'
 
 
 directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\14848199310kad.docx'
-directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\11974198910kfad.docx'
-
 
 directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\TRY'
+directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\11974198910kfad.docx'
+directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\16631994.docx'
+directory = r'C:\Users\Panqiao\Documents\Research\AICPA\Files to separate\4585199510kfad.docx'
 directory = r'C:\Users\Panqiao\Documents\Research\AICPA\fdbgvkey'
+
 #print(fipath(0, directory))
 fipath(0, directory, 0)
 

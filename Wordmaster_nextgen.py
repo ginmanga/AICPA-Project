@@ -34,7 +34,6 @@ def parseText(num_docs, text, list_par, doc_type = 'aicpa'):
     #id_data = ['File Path', 'File Name','Docs in file', 'Company Name', 'SIC', 'DATE', 'TICKER']
     id_data = []
     count = 1
-    #print(doc_type)
     if doc_type is 'aicpa':
         #names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count', 'start_paragraph', 'Company Name',
                   #'SIC', 'DATE', 'TICKER']]
@@ -65,7 +64,7 @@ def parseText(num_docs, text, list_par, doc_type = 'aicpa'):
             sic = next((if_find('SIC-CODES:', j, 1) for j in i if j.lower().find('sic-codes:') >= 0), "")
             p_sic = next((if_find('PRIMARY SIC:', j, 1) for j in i if j.lower().find('primary sic:') >= 0), "")
             id_data.append([doc_type, name, fil_date, doc_date, ticker, exchange, incorp, cusip, sic, p_sic])
-            print(id_data)
+            #print(id_data)
         #print("not done yet")
     return id_data #names
 
@@ -163,14 +162,17 @@ def fnd(paragraphs, terms, file_name):
         dc = any(char.isdigit() for char in i.text)
         c_list = [fc, sc, dc]
         if all(cond is True for cond in c_list):
-            list_paras.append(count_par)
-            count_doc += 1
+            try:
+                int(i.text.split()[0])
+                list_paras.append(count_par)
+                count_doc += 1
+            except:
+                continue
             if count_doc is 1:
                 #check if the file is AICPA or SECONLINE
-                #print("NEEE")
                 #text = getText(paragraphs, [count_par], "check")
                 doc_type = check_file(paragraphs, [count_par])
-                print(doc_type)
+                #print(doc_type)
         count_par += 1
     if count_doc is 0:
         print("something wrong with file")
@@ -185,31 +187,8 @@ def check_file(paragraphs, count_par):
     sec_online = ['copyright', 'sec', 'online']
     text = getText(paragraphs, count_par, "check")
     doc_type = 'aicpa'
-    #doc_type2 = 'aicpa'
-    #doc_type3 = 'aicpa'
-    #if next((s for s in text[0] for s1 in sec_online if s1.lower() in s.lower()), None) is not None:
-        #doc_type = "seconline"
-    if (sec_online in [s for s in sec_online for s1 in text[0] if s in s1.lower()]) is True:
-        doc_type = "seconline"
-    #if next((s for s in text[0] if all(i for i in sec_online in s.lower()) is True, None) is not None:
-        #doc_type3 = "seconline"
     if all(x in text[0][1].lower() for x in sec_online) is True:
         doc_type = "seconline"
-
-    print(text[0][1])
-    #print([s for s in sec_online if s in text[0][1].lower()])
-    #print(set(sec_online) in [s for s in sec_online if s in text[0][1].lower()])
-    #print(all(x in sec_online for x in [s for s in sec_online for s1 in text[0] if s in s1.lower()]))
-    #print(text[0][1].lower())
-    #print(all(x in sec_online for x in [text[0][1].lower()]))
-    print(all(x in text[0][1].lower() for x in sec_online))
-    #print(all(i for i in sec_online if i in text[0][2].lower()))
-    print("JEEEEERE")
-    #print(next((s for s in text[0] for s1 in sec_online if s1.lower() in s.lower()), None))
-    #print(text[0][2])
-    #cc = '[*Summary]             COPYRIGHT 1989 SEC ONLINE, INC.'
-
-    print(doc_type)
     return doc_type
 
 
@@ -282,8 +261,6 @@ def file_loop(path, ptofile):
                         file_data.append(a[0:3]+i)
                 else:
                     file_data.append(a)
-                #print('MAIIN')
-                #print(file_data)
                 count += 1
             for i in file_data:
                 if doc_type == 'aicpa':
@@ -318,6 +295,8 @@ def file_loop(path, ptofile):
                 if doc_type == 'seconline':
                     names2.append(i)
                 if doc_type == 'PDF':
+                    names3.append(i)
+                if doc_type == 'FDL':
                     names4.append(i)
     #print(names)
     #print(names2)
