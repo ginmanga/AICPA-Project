@@ -245,15 +245,9 @@ def file_loop(path, ptofile):
             for i in os.listdir(file_path_a):
                 file_path_open = os.path.join(file_path_a, i)
                 a = [file_path_open]
-                #print('MAIIN CALL FSRRRR')
                 print(a)
                 file_name, count_doc, list_paras, paras, doc_type = fsttotal(a[0], os.path.splitext(file)[0])
                 a.extend([file_name, count_doc, list_paras])
-                #a.append(getText(paras, list_paras, doc_type))
-                # a.extend(fsttotal(file_path_a, os.path.splitext(file)[0]))
-                # a.append(getText(file_path_a, a))
-                #print(a)
-                #b = a
                 if doc_type not in ['PDF', 'FDL']:
                     b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras,
                                   doc_type)  # collects data from the text in each document
@@ -276,12 +270,7 @@ def file_loop(path, ptofile):
             a = [file_path_a]
             file_name, count_doc, list_paras, paras, doc_type = fsttotal(file_path_a, os.path.splitext(file)[0])
             a.extend([file_name, count_doc, list_paras])
-            #a.append(getText(paras, list_paras, doc_type))
-            #a.extend(fsttotal(file_path_a, os.path.splitext(file)[0]))
-            #a.append(getText(file_path_a, a))
-            #print(a)
-            #b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras, doc_type)  # collects data from the text in each document
-            if doc_type is not "PDF":
+            if doc_type not in ['PDF', 'FDL']:
                 b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras,
                               doc_type)  # collects data from the text in each document
             #count += 1
@@ -298,10 +287,6 @@ def file_loop(path, ptofile):
                     names3.append(i)
                 if doc_type == 'FDL':
                     names4.append(i)
-    #print(names)
-    #print(names2)
-    #print(names3)
-    #print(names4)
     if ptofile == 1:
         write_file(path, [names, names2, names3, names4])
     return names
@@ -309,6 +294,7 @@ def file_loop(path, ptofile):
 
 def fipath(gvkey, path, ptofile = 0):
     """Function delivers path to files to open"""
+    # call fsstotal, getText and parseText
     path = os.path.abspath(path)
     names = [['File_Path', 'File_Name', 'Doc_num', 'Doc_count',
               'start_paragraph', 'Company Name','SIC', 'DATE', 'TICKER']]
@@ -319,23 +305,16 @@ def fipath(gvkey, path, ptofile = 0):
         file_name = os.path.splitext(os.path.basename(path))[0]
         # get file name without path or extension
         a = [path]
-        #a1, a2 = fsttotal(path, file_name)
-        # gets starting paragraphs for each document
         file_name, count_doc, list_paras, paras, doc_type = fsttotal(path, file_name)
         a.extend([file_name, count_doc, list_paras])
-        #print(a)
-        #a.append(getText(paras, list_paras, doc_type))
-        print(getText(paras, list_paras, doc_type))
         b = parseText(count_doc, getText(paras, list_paras, doc_type), list_paras, doc_type) #collects data from the text in each document
-        #print(a[0:3])
-        #print(b)
         file_data = [a[0:3] + z for z in b]
         for i in file_data:
             if doc_type == 'aicpa':
                 names.append(i)
             if doc_type == 'seconline':
                 names2.append(i)
-        #print(names)
+
         return names
     else:
         return file_loop(path, ptofile)
