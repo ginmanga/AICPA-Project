@@ -57,13 +57,15 @@ def parseText(num_docs, text, list_par, doc_type = 'aicpa'):
             name = i[4]
             fil_date = i[3].split()[1]
             doc_date = i[3].split()[3]
+            start_paragraph = list_par[count - 1]
             ticker = next((if_find('ticker-symbol:', j, 1) for j in i if j.lower().find('ticker-symbol:') >= 0), "").split()[0]
             exchange = next((if_find('ticker-symbol:', j, 1) for j in i if j.lower().find('ticker-symbol:') >= 0), "").split()[2]
             incorp = next((if_find('INCORPORATION:', j, 1) for j in i if j.lower().find('incorporation:') >= 0), "")
             cusip = next((if_find('CUSIP NUMBER:', j, 1) for j in i if j.lower().find('cusip number:') >= 0), "")
             sic = next((if_find('SIC-CODES:', j, 1) for j in i if j.lower().find('sic-codes:') >= 0), "")
             p_sic = next((if_find('PRIMARY SIC:', j, 1) for j in i if j.lower().find('primary sic:') >= 0), "")
-            id_data.append([doc_type, name, fil_date, doc_date, ticker, exchange, incorp, cusip, sic, p_sic])
+            id_data.append([str(count), str(start_paragraph), doc_type, name, fil_date, doc_date, ticker, exchange, incorp, cusip, sic, p_sic])
+            count += 1
             #print(id_data)
         #print("not done yet")
     return id_data #names
@@ -165,11 +167,20 @@ def fnd(paragraphs, terms, terms2, file_name):
         c_list = [fc, sc, dc]
         c_list2 = [fc, sc2, dc]
         if all(cond is True for cond in c_list) or all(cond is True for cond in c_list2):
-            try: #correct for some special cases
-                int(i.text.split()[0])
+            #try: #correct for some special cases
+                #int(i.text.split()[0])
+                #list_paras.append(count_par)
+                #count_doc += 1
+            #except:
+                #continue
+            #print(i.text.split())
+            #print(i.text.split()[0].isdigit())
+            #print(i.text.split()[0].lower() == 'focus')
+            #print(i.text.split()[0].lower())
+            if i.text.split()[0].isdigit() or i.text.split()[0].lower() == 'focus':
                 list_paras.append(count_par)
                 count_doc += 1
-            except:
+            else:
                 continue
             if count_doc is 1:
                 #check if the file is AICPA or SECONLINE
@@ -246,11 +257,8 @@ def file_loop(path, ptofile):
         if os.path.isdir(file_path_a) is True:
             count = 0
             file_data = [] #resets the data for the new folder
-            print([f for f in os.listdir(file_path_a) if not f.startswith('~$')])
             for i in [f for f in os.listdir(file_path_a) if not f.startswith('~$')]:
                 file_data = []
-                print("HEERE")
-                print(i)
                 file_path_open = os.path.join(file_path_a, i)
                 a = [file_path_open]
                 print(a)
@@ -268,12 +276,10 @@ def file_loop(path, ptofile):
                     if doc_type == 'aicpa':
                         names.append(i)
                     if doc_type == 'seconline':
-                        print("WEEEEE")
                         names2.append(i)
                     if doc_type == 'PDF':
                         names3.append(i)
                     if doc_type == 'FDL':
-                        print("INFILEFDL")
                         names4.append(i)
         else:
             file_data = []
